@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# @author Sampson L. Chen (sampson-chen / slchen)
+# @date 2012-10-14
+# 
+# @description
+# - Configuration file for sack
+
+shortcut_cmd=F
+dev_null=/dev/null
+

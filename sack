@@ -9,6 +9,8 @@
 # 
 # @dependencies:
 # - ack (http://betterthangrep.com/)
+# - awk
+# - sed
 #
 # @license:
 # - MIT as of this version.

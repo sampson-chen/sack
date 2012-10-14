@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# @filename: sack
+# @author: Sampson L. Chen (sampson-chen / slchen)
+# @date: 2012-10-14
+#
+# @description: 
+# s(hortcut)-ack - a faster way to use ack (or grep)!
+

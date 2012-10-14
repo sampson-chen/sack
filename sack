@@ -6,4 +6,14 @@
 #
 # @description: 
 # s(hortcut)-ack - a faster way to use ack (or grep)!
+# 
+# @dependencies:
+# - ack (http://betterthangrep.com/)
+#
+# @license:
+# - MIT as of this version.
+#
+# @usage:
+# - for additional usage information, see README.md
 
+ack --color $@

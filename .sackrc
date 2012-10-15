@@ -6,6 +6,11 @@
 # @description
 # - Configuration file for sack
 
-shortcut_cmd=F
-dev_null=/dev/null
+# The shortcut command is F, as in (F)ollow
+sack__shortcut_cmd=F
+# File to store the shortcuts so they can be used across terminal / shell sessions
+sack__shortcut_file=~/.sack_shortcuts
+# Toggle the instructions after search results; 0 for off
+sack__show_instructions=1
+sack__dev_null=/dev/null
 

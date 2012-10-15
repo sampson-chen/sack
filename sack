@@ -9,6 +9,7 @@
 # 
 # @dependencies:
 # - ack (http://betterthangrep.com/)
+# - tee
 # - awk
 # - sed
 #
@@ -18,10 +19,10 @@
 # @usage:
 # - for additional usage information, see README.md
 
-sack_config_path=~/sampson-chen-util/sack/.sackrc
+sack__config_path=~/.sackrc
 
 # Set up the variables to use for sack
-. $sack_config_path
+. $sack__config_path
 
 # Script Functions
 
@@ -32,26 +33,47 @@ display_shortcuts() {
     # We could have restored the default look for ack with the --group option, but
     # it turns out that this is actually simpler to parse with --nogroup and then
     # reformat the output to match the --group formats.
-    awk -v y=$shortcut_cmd -v f_name=$sack__file_name -F':' 'BEGIN {x=1};
+    awk -v y=$sack__shortcut_cmd -v f_name=$sack__file_name -F':' '
+    BEGIN {x=1};
     {
         if ($1 != f_name) {
             printf("\n%s\n", $1);
             f_name=$1;
         };
         printf("[%s %s] ", y, x);
-        for (i=2; i<=NF; i++) {
-            printf("%s", $i);
+        printf("%s", $2);
+        for (i=3; i<=NF; i++) {
+            printf(":%s", $i);
         }
         printf("\n");
         x++;
     };'
 }
 
+save_shortcuts_to_file() {
+    awk -F':' '
+    {
+        print $2 " " $1;
+    };'
+}
+
 # Script Main
-sack__file_name="     "
+echo "================= running sack! ================="
+
+# Initializing the variable for checking different file names
+sack__file_name="                                              "
+
 # We add the pwd as last argument to ack so the file names of output
 # are displayed as absolute paths, so that they can be shared across
 # multiple terminal / shell sessions
 sack__cwd=$(pwd) 
-ack --color $@ $sack__cwd | display_shortcuts
-echo ""
+ack --color $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(save_shortcuts_to_file > $sack__shortcut_file)
+
+if [[ $sack__show_instructions -eq 0 ]]; then
+    # do nothing
+    echo ""
+else 
+    echo ""
+    echo "Enter $sack__shortcut_cmd # to go directly to the search result!"
+    echo "Example: ( user@linux:~$ $sack__shortcut_cmd 25 )"
+fi

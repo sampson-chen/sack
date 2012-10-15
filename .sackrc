@@ -13,4 +13,7 @@ sack__shortcut_file=~/.sack_shortcuts
 # Toggle the instructions after search results; 0 for off
 sack__show_instructions=1
 sack__dev_null=/dev/null
-
+# Determine the OS
+sack__OS=$(uname)
+# @todo: add support for editors other than vim
+sack__default_editor=vim

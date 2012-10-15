@@ -33,14 +33,14 @@ display_shortcuts() {
     # We could have restored the default look for ack with the --group option, but
     # it turns out that this is actually simpler to parse with --nogroup and then
     # reformat the output to match the --group formats.
-    awk -v y=$sack__shortcut_cmd -v f_name=$sack__file_name -F':' '
+    awk -v f_name=$sack__file_name -F':' '
     BEGIN {x=1};
     {
         if ($1 != f_name) {
             printf("\n%s\n", $1);
             f_name=$1;
         };
-        printf("[%s %s] ", y, x);
+        printf("[%s] ", x);
         printf("%s", $2);
         for (i=3; i<=NF; i++) {
             printf(":%s", $i);
@@ -50,14 +50,46 @@ display_shortcuts() {
     };'
 }
 
-save_shortcuts_to_file() {
+# Processes the output that goes into the shortcut file:
+# Format: line_number:full_file_path
+process_shorcut_paths() {
+    # Using : as the delimiter here should be fine, because : is not used in file names
     awk -F':' '
     {
         print $2 " " $1;
     };'
 }
 
-# Script Main
+# Remove the escaped characters that get piped from ack in order to preserve
+# colored output to stdout
+remove_escaped_chars() {
+    # Need to do a check for the OS, because Linux uses a different sed
+    # than OS X
+
+    # Linux
+    if [[ $sack__OS == "Linux" ]]; then
+        sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
+    # OS X
+    elif [[ $sack__OS == "Darwin" ]]; then
+        sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
+    fi
+    # @todo: implement support for other OSes at a later date
+}
+
+# Create the actual shortcut command to be used across terminals / shell sessions
+create_shortcut_cmd() {
+    # @todo: add support for other editors as well
+    sack__shortcut_cmd_path=~/bin/$sack__shortcut_cmd
+    echo "#!/bin/bash" > $sack__shortcut_cmd_path
+    echo "sack__vim_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
+    echo "vim +\$sack__vim_shortcut" >> $sack__shortcut_cmd_path
+    chmod +x $sack__shortcut_cmd_path
+}
+
+# =============================================
+# ================ Script Main ================ 
+# =============================================
+echo ""
 echo "================= running sack! ================="
 
 # Initializing the variable for checking different file names
@@ -67,13 +99,18 @@ sack__file_name="                                              "
 # are displayed as absolute paths, so that they can be shared across
 # multiple terminal / shell sessions
 sack__cwd=$(pwd) 
-ack --color $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(save_shortcuts_to_file > $sack__shortcut_file)
 
+# The actual wrapper around ack
+ack --color $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
+
+# Show usage instructions for first-time users; this can be turned off
 if [[ $sack__show_instructions -eq 0 ]]; then
     # do nothing
     echo ""
 else 
     echo ""
-    echo "Enter $sack__shortcut_cmd # to go directly to the search result!"
-    echo "Example: ( user@linux:~$ $sack__shortcut_cmd 25 )"
+    echo "===== Use: \"$sack__shortcut_cmd #\" to go directly to the search result!"
+    echo "===== Example: ( user@linux:~$ $sack__shortcut_cmd 25 )"
 fi
+
+create_shortcut_cmd

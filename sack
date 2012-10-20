@@ -13,6 +13,9 @@
 # - tee
 # - awk
 # - sed
+# 
+# @version:
+# 1.0
 #
 # @license:
 # - MIT as of this version.
@@ -20,12 +23,31 @@
 # @usage:
 # - for additional usage information, see README.md
 
-sack__config_path=~/.sackrc
-
-# Set up the variables to use for sack
-. $sack__config_path
-
 # Script Functions
+
+# Print information about the current profile
+print_current_profile_info() {
+    echo ""
+    echo "==> Profile: $sack__profile_name"
+    echo "==> Using flags: $sack__flags"
+    echo "==> Searching under: $sack__cwd"
+}
+
+# Print help / usage information about sack
+print_help() {
+    echo ""
+    echo "=============== sack Usage Information ==============="
+    echo ""
+    echo "==> To print this message:"
+    echo "sack -h"
+    echo "sack --help"
+    echo ""
+    echo "==> To learn more about ack:"
+    echo "ack --help"
+    echo "man ack-grep"
+    print_current_profile_info
+    #@todo: add information about switching profiles, and setting preset flags
+}
 
 # Prefixes a shortcut tag to relevant output lines.
 display_shortcuts() {
@@ -87,22 +109,128 @@ create_shortcut_cmd() {
     chmod +x $sack__shortcut_cmd_path
 }
 
+# Switch to a different profile
+switchprofile() {
+    # Get the specified profile name from cmdline
+    sack__selected_profile=$1
+    # Try to find the corresponding profile entry that matches the name in config file
+    sack__current_profile_raw=$(cat $sack__config_path | grep -A 2 "sack__profile_name=$sack__selected_profile")
+
+    # Get the exact profile name that matches this entry
+    sack__new_profile_name=$(echo "$sack__current_profile_raw" | grep "sack__profile_name=" | sed -e "s/sack__profile_name=//")
+    
+    # If we can't find a match with grep, or if the match partial but not exact, bail.
+    if [[ -z $sack__current_profile_raw || $sack__selected_profile != $sack__new_profile_name ]]; then 
+        echo "Error: profile \"$sack__selected_profile\" is not found"
+        echo "To create a new profile, do:"
+        echo "sack --anp"
+        echo "sack --addnewprofile"
+        return 1 
+    fi
+
+    # Get the flags for this profile entry
+    sack__new_profile_preset_flags=$(echo "$sack__current_profile_raw" | grep "sack__profile_preset_flags" | sed -e "s/sack__profile_preset_flags=//")
+    # Get the search directory for this profile entry
+    sack__new_profile_preset_directory=$(echo "$sack__current_profile_raw" | grep "sack__profile_preset_directory" | sed -e "s/sack__profile_preset_directory=//")
+
+    # Process the information that need to be written back to the config file
+    # into a temporary file so we don't have I/O conflict
+    cat $sack__config_path | awk -v new_profile_name="$sack__new_profile_name" -v new_profile_preset_flags="$sack__new_profile_preset_flags" -v new_profile_preset_directory="$sack__new_profile_preset_directory" 'BEGIN {in_cur_profile_block=0};
+        {
+            if ( in_cur_profile_block==0 ) {
+                print $0;
+            }
+
+            if ( $2=="sack__beacon_tag_current_profile" ) {
+                if ( $3=="BEGIN" ) {
+                    in_cur_profile_block=1;
+                    print "sack__profile_name=" new_profile_name;
+                    print "sack__profile_preset_flags=" new_profile_preset_flags;
+                    print "sack__profile_preset_directory=" new_profile_preset_directory;
+                } else if ( $3=="END" ) {
+                    in_cur_profile_block=0;
+                }
+            }
+        };' > $sack__config_path.tmp
+    # Swap the temp file into the config file to avoid I/O conflict
+    rm $sack__config_path
+    mv $sack__config_path.tmp $sack__config_path
+
+    # Tell user that which profile sack has switched to
+    echo ""
+    echo "===> sack: switched profile <==="
+    echo "Now using profile: \"$sack__new_profile_name\""
+    echo "Profile preset flags: $sack__new_profile_preset_flags"
+    echo "Profile preset directory: $sack__new_profile_preset_directory"
+    echo ""
+}
+
 # =============================================
 # ================ Script Main ================ 
 # =============================================
-echo ""
-echo "================= running sack! ================="
+
+# Where to find the config file
+sack__config_path=~/.sackrc
 
 # Initializing the variable for checking different file names
 sack__file_name="                                              "
 
-# We add the pwd as last argument to ack so the file names of output
-# are displayed as absolute paths, so that they can be shared across
-# multiple terminal / shell sessions
-sack__cwd=$(pwd) 
+# Deal with the options that only have to do with sack instead of ack
+sack__option=$1
+
+# sack profiles - allow switching between different profiles
+# Show help printout
+if [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--help" || "$sack__option" == "--info" ]]; then
+    . $sack__config_path
+    print_help
+    echo ""
+    exit 0
+elif [[ "$sack__option" == "-wp" || "$sack__option" == "--whichprofile" ]]; then
+    . $sack__config_path
+    print_current_profile_info
+    echo ""
+    exit 0
+# Switch profiles
+elif [[ "$sack__option" == "-sp" || "$sack__option" == "--switchprofile" ]]; then
+    switchprofile $2
+    exit 0
+# Rename the current profile
+elif [[ "$sack__option" == "-rp" || "$sack__option" == "--renameprofile" ]]; then
+    renameprofile $2
+    exit 0
+# Set new preset flags for current profile
+elif [[ "$sack__option" == "-sf" || "$sack__option" == "--setflags" ]]; then
+    setflags $2
+    exit 0
+# Set new preset search directory for current profile
+elif [[ "$sack__option" == "-sd" || "$sack__option" == "--setdir" ]]; then
+    setdirectory $2
+    exit 0
+fi
+
+# Set up the variables to use for sack
+. $sack__config_path
+
+# Check to see if sack should be running with a particular profile:
+if [[ "$sack__profile_name" == "no_profile" ]]; then
+    # We add the pwd as last argument to ack so the file names of output
+    # are displayed as absolute paths, so that they can be shared across
+    # multiple terminal / shell sessions
+    sack__flags=""
+    sack__cwd=$(pwd) 
+else
+    sack__flags=$sack__profile_preset_flags
+    sack__cwd=$sack__profile_preset_directory
+fi
+
+# Announce start of sack:
+echo ""
+echo "============> running sack! <============"
+print_current_profile_info
+echo ""
 
 # The actual wrapper around ack
-ack --color $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
+ack --color $sack__flags $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
 
 # Show usage instructions for first-time users; this can be turned off
 if [[ $sack__show_instructions -eq 0 ]]; then

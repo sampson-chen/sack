@@ -3,6 +3,8 @@ sack
 
 s(hortcut)-ack: a faster way to use ack (and grep)!
 
+(sack acts as a wrapper for ack to provide convenience for the repetitive menial tasks.)
+
 ## How to Install:
 
 Open a terminal and run the following:
@@ -34,7 +36,7 @@ sack prefixes shortcut tags to ack's search results:
 
 Now, instead of having to spend time tediously navigating to some deep directory and typing out the file name, simply do:
 
-    F 21
+    user@linux:~$ F 21
 
 And sack will open the file associated with that particular search result with your favorite editor (-cough-vim-cough-) and even go to the right line for you automatically. (It doesn't have to be "F", see config file for reassigning the shortcut command)
 

@@ -16,6 +16,11 @@ sack__install_main=~/bin
 sack__install_sackrc=~/
 sack__install_cwd=$(pwd)
 
+# If the install directory doesn't exist, create it
+if [[ ! -d "$sack__install_main" ]]; then
+    mkdir $sack__install_main
+fi
+
 cp $sack__install_cwd/sack $sack__install_main/
 chmod +x $sack__install_main/sack
 cp $sack__install_cwd/.sackrc $sack__install_sackrc/

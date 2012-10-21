@@ -8,6 +8,9 @@
 # @description: 
 # s(hortcut)-ack - a faster way to use ack (or grep)!
 # 
+# For more details:
+# https://github.com/sampson-chen/sack
+# 
 # @dependencies:
 # - ack (http://betterthangrep.com/)
 # - tee
@@ -31,25 +34,61 @@
 # Print information about the current profile
 print_current_profile_info() {
     echo ""
-    echo "===> Profile: $sack__profile_name"
+    echo "===> Current Profile: $sack__profile_name"
     echo "===> Using flags: $sack__profile_preset_flags"
     echo "===> Searching under: $sack__profile_preset_directory"
 }
 
 # Print help / usage information about sack
 print_help() {
+    sp="   " # space
     echo ""
-    echo "=============== sack Usage Information ==============="
+    echo "===============> sack Usage Information <==============="
     echo ""
-    echo "===> To print this message:"
-    echo "sack -h"
-    echo "sack --help"
+    echo "===> To print this message: <==="
+    echo "$sp sack"
+    echo "$sp sack -h"
+    echo "$sp sack --help"
+    echo "$sp sack --info"
     echo ""
-    echo "===> To learn more about ack:"
-    echo "ack --help"
-    echo "man ack-grep"
+    echo "===> To learn more about ack: <==="
+    echo "$sp ack --help"
+    echo "$sp man ack-grep"
+    echo ""
+    echo "========> sack-specific commands <========"
+    echo ""
+    echo "===> Which Profile? <==="
+    echo "To find out which profile you are currently on:"
+    echo "$sp sack -wp"
+    echo "$sp sack --whichprofile"
+    echo ""
+    echo "===> Switch Profile <==="
+    echo "To switch to a different profile:"
+    echo "$sp sack -sp PROFILE_NAME"
+    echo "$sp sack --switchprofile no_profile"
+    echo ""
+    echo "===> Rename Profile <==="
+    echo "To rename the current profile:"
+    echo "$sp sack -rp NEW_PROFILE_NAME"
+    echo "$sp sack --renameprofile reviewboard"
+    echo ""
+    echo "===> Set Flags <==="
+    echo "To set new preset flags to use for the current profile:"
+    echo "(All searches run using this profile will use these flags)"
+    echo "$sp sack -sf NEW_FLAGS"
+    echo "$sp sack --setflags"
+    echo ""
+    echo "===> Set Directory <==="
+    echo "To set a new preset directory to use for the current profile:"
+    echo "(All searches will be run under this directory with this profile)"
+    echo "$sp sack -sd NEW_DIRECTORY"
+    echo "$sp sack --setdirectory ~/src/reviewboard"
+    echo ""
+    echo "===> List Profiles <==="
+    echo "To show the current available profiles:"
+    echo "$sp sack -lp"
+    echo "$sp sack --listprofiles"
     print_current_profile_info
-    #@todo: add information about switching profiles, and setting preset flags
 }
 
 # Prefixes a shortcut tag to relevant output lines.
@@ -181,6 +220,10 @@ renameprofile() {
         echo ""
         echo "===> Invalid new profile name!"
         return 1
+    elif [[ "$sack__new_profile_name" == "no_profile" ]]; then
+        echo ""
+        echo "===> Must not rename current profile to \"no_profile\"!"
+        return 1
     fi
 
     # Read the current profile directly from the config file to avoid sync issues
@@ -217,7 +260,7 @@ renameprofile() {
 }
 
 setflags() {
-    sack__new_flags=$1
+    sack__new_flags=$@
     # Read the current profile directly from the config file to avoid sync issues
     sack__current_profile_raw=$(cat $sack__config_path | grep -A 3 "# sack__beacon_tag_current_profile BEGIN")
 
@@ -247,7 +290,7 @@ setflags() {
 
             if (do_replace==1 && $0==replace_flag) {
                 print replace_flag
-                print "sack__profile_preset_flags=" new_profile_preset_flags;
+                print "sack__profile_preset_flags=\"" new_profile_preset_flags "\"";
                 print "sack__profile_preset_directory=" profile_preset_directory;
             } else if (do_replace==0) {
                 print $0
@@ -268,7 +311,7 @@ setdirectory() {
     # Validate that it is a valid directory path
     if [[ ! -d "$sack__new_directory" ]]; then
         echo ""
-        echo "===> Invalid directory path!"
+        echo "===> Invalid directory path: Does not exist!"
         return 1
     fi
 
@@ -316,6 +359,32 @@ setdirectory() {
     echo "Preset directory for profile \"$sack__profile_name\" now set to: $sack__new_directory" 
 }
 
+listprofiles() {
+    # print the profiles to stdout
+    echo ""
+    echo "===> sack: list profiles <==="
+    echo "The following profiles are avaible for use:"
+    cat $sack__config_path | awk 'BEGIN {do_print=0};
+        {
+            if ($0=="# sack__beacon_tag_profiles") {
+                do_print=1
+            } else if ($0=="# sack__beacon_tag_new_profiles") {
+                do_print=0
+            }
+
+            if (do_print==1) {
+                if ($1=="#") {
+                    if ($2=="") {
+                        print " "
+                    }
+                } else {
+                    print $0
+                }
+            }
+        };'
+            
+}
+
 # =============================================
 # ================ Script Main ================ 
 # =============================================
@@ -353,13 +422,18 @@ elif [[ "$sack__option" == "-rp" || "$sack__option" == "--renameprofile" ]]; the
     exit 0
 # Set new preset flags for current profile
 elif [[ "$sack__option" == "-sf" || "$sack__option" == "--setflags" ]]; then
-    setflags $2
+    shift
+    setflags $@
     echo ""
     exit 0
 # Set new preset search directory for current profile
 elif [[ "$sack__option" == "-sd" || "$sack__option" == "--setdirectory" ]]; then
     setdirectory $2
     echo ""
+    exit 0
+# Print the current profiles that are available
+elif [[ "$sack__option" == "-lp" || "$sack__option" == "--listprofiles" ]]; then
+    listprofiles
     exit 0
 fi
 
@@ -383,7 +457,7 @@ echo ""
 echo "============> running sack! <============"
 # Note that this is different from print_current_profile_info()
 echo ""
-echo "===> Profile: $sack__profile_name"
+echo "===> Current Profile: $sack__profile_name"
 echo "===> Using flags: $sack__flags"
 echo "===> Searching under: $sack__cwd"
 echo ""

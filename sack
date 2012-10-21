@@ -84,6 +84,11 @@ print_help() {
     echo "$sp sack -sd NEW_DIRECTORY"
     echo "$sp sack --setdirectory ~/src/reviewboard"
     echo ""
+    echo "===> Add New Profile <==="
+    echo "To add a new empty profile:"
+    echo "$sp sack -anp"
+    echo "$sp sack --addnewprofile"
+    echo ""
     echo "===> List Profiles <==="
     echo "To show the current available profiles:"
     echo "$sp sack -lp"
@@ -218,7 +223,7 @@ renameprofile() {
     # Validation for the new profile name: it must not be empty
     if [[ -z "$sack__new_profile_name" ]]; then
         echo ""
-        echo "===> Invalid new profile name!"
+        echo "===> Must specify a new profile name!"
         return 1
     elif [[ "$sack__new_profile_name" == "no_profile" ]]; then
         echo ""
@@ -242,8 +247,7 @@ renameprofile() {
     
     # Process the information that need to be written back to the config file
     # into a temporary file so we don't have I/O conflict
-    cat $sack__config_path | awk -v replace_flag="sack__profile_name=$sack__profile_name" -v new_profile_name=$sack__new_profile_name 'BEGIN {do_replace=0};
-        {
+    cat $sack__config_path | awk -v replace_flag="sack__profile_name=$sack__profile_name" -v new_profile_name=$sack__new_profile_name '{
             if ($0==replace_flag) {
                 print "sack__profile_name=" new_profile_name
             } else {
@@ -359,6 +363,42 @@ setdirectory() {
     echo "Preset directory for profile \"$sack__profile_name\" now set to: $sack__new_directory" 
 }
 
+addnewprofile() {
+    sack__add_profile_name=$1
+
+    # Validation for the new profile name: it must not be empty
+    if [[ -z "$sack__add_profile_name" ]]; then
+        echo ""
+        echo "===> Must specify a name when adding a new profile!"
+        return 1
+    elif [[ "$sack__add_profile_name" == "no_profile" ]]; then
+        echo ""
+        echo "===> Must not add new profile with name \"no_profile\"!"
+        return 1
+    fi
+    
+    # Process the information that need to be written back to the config file
+    # into a temporary file so we don't have I/O conflict
+    cat $sack__config_path | awk -v add_profile_name=$sack__add_profile_name '{
+            if ($0=="# sack__beacon_tag_new_profiles") {
+                print "sack__profile_name=" add_profile_name
+                print "sack__profile_preset_flags="
+                print "sack__profile_preset_directory="
+                print "#"
+                print "# sack__beacon_tag_new_profiles"
+            } else {
+                print $0
+            }
+        };' > $sack__config_path.tmp
+    # Swap the temp file into the config file to avoid I/O conflict
+    rm $sack__config_path
+    mv $sack__config_path.tmp $sack__config_path
+
+    echo ""
+    echo "===> sack: added new profile <==="
+    echo "New Profile: $sack__add_profile_name"
+}
+
 listprofiles() {
     # print the profiles to stdout
     echo ""
@@ -429,6 +469,11 @@ elif [[ "$sack__option" == "-sf" || "$sack__option" == "--setflags" ]]; then
 # Set new preset search directory for current profile
 elif [[ "$sack__option" == "-sd" || "$sack__option" == "--setdirectory" ]]; then
     setdirectory $2
+    echo ""
+    exit 0
+# Add a new profile
+elif [[ "$sack__option" == "-anp" || "$sack__option" == "--addnewprofile" ]]; then
+    addnewprofile $2
     echo ""
     exit 0
 # Print the current profiles that are available

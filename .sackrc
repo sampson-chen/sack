@@ -13,7 +13,7 @@ sack__shortcut_cmd=F
 sack__shortcut_file=~/.sack_shortcuts
 
 # Toggle the instructions after search results; 0 for off
-sack__show_instructions=1
+sack__show_instructions=0
 
 # Variable(s) to remove magic values from the code
 sack__dev_null=/dev/null

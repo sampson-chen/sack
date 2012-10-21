@@ -32,8 +32,8 @@
 print_current_profile_info() {
     echo ""
     echo "===> Profile: $sack__profile_name"
-    echo "===> Using flags: $sack__flags"
-    echo "===> Searching under: $sack__cwd"
+    echo "===> Using flags: $sack__profile_preset_flags"
+    echo "===> Searching under: $sack__profile_preset_directory"
 }
 
 # Print help / usage information about sack
@@ -125,7 +125,9 @@ switchprofile() {
     
     # If we can't find a match with grep, or if the match partial but not exact, bail.
     if [[ -z $sack__switch_to_profile_raw|| $sack__selected_profile != $sack__new_profile_name ]]; then 
-        echo "Error: profile \"$sack__selected_profile\" is not found"
+        echo ""
+        echo "===> Error: profile \"$sack__selected_profile\" is not found"
+        echo ""
         echo "To create a new profile, do:"
         echo "sack --anp"
         echo "sack --addnewprofile"
@@ -148,11 +150,14 @@ switchprofile() {
             if ( $2=="sack__beacon_tag_current_profile" ) {
                 if ( $3=="BEGIN" ) {
                     in_cur_profile_block=1;
+                    print "#"
                     print "sack__profile_name=" new_profile_name;
                     print "sack__profile_preset_flags=" new_profile_preset_flags;
                     print "sack__profile_preset_directory=" new_profile_preset_directory;
                 } else if ( $3=="END" ) {
                     in_cur_profile_block=0;
+                    print "#"
+                    print $0
                 }
             }
         };' > $sack__config_path.tmp
@@ -166,6 +171,49 @@ switchprofile() {
     echo "Now using profile: \"$sack__new_profile_name\""
     echo "Profile preset flags: $sack__new_profile_preset_flags"
     echo "Profile preset directory: $sack__new_profile_preset_directory"
+}
+
+renameprofile() {
+    sack__new_profile_name=$1
+
+    # Validation for the new profile name: it must not be empty
+    if [[ -z "$sack__new_profile_name" ]]; then
+        echo ""
+        echo "===> Invalid new profile name!"
+        return 1
+    fi
+
+    # Read the current profile directly from the config file to avoid sync issues
+    sack__current_profile_raw=$(cat $sack__config_path | grep -A 3 "# sack__beacon_tag_current_profile BEGIN")
+
+    # Get the current profile name
+    sack__profile_name=$(echo "$sack__current_profile_raw" | grep "sack__profile_name=" | sed -e "s/sack__profile_name=//")
+
+    # Disallow users to rename no_profile so they can always quickly
+    # access default behaviour of sack
+    if [[ "$sack__profile_name" == "no_profile" ]]; then
+        echo ""
+        echo "===> Renaming for \"no_profile\" is disallowed!"
+        return 1
+    fi
+    
+    # Process the information that need to be written back to the config file
+    # into a temporary file so we don't have I/O conflict
+    cat $sack__config_path | awk -v replace_flag="sack__profile_name=$sack__profile_name" -v new_profile_name=$sack__new_profile_name 'BEGIN {do_replace=0};
+        {
+            if ($0==replace_flag) {
+                print "sack__profile_name=" new_profile_name
+            } else {
+                print $0
+            }
+        };' > $sack__config_path.tmp
+    # Swap the temp file into the config file to avoid I/O conflict
+    rm $sack__config_path
+    mv $sack__config_path.tmp $sack__config_path
+
+    echo ""
+    echo "===> sack: renamed profile <==="
+    echo "Profile renamed from \"$sack__profile_name\" to: \"$sack__new_profile_name\"" 
 }
 
 setflags() {
@@ -247,6 +295,7 @@ elif [[ "$sack__option" == "-sp" || "$sack__option" == "--switchprofile" ]]; the
 # Rename the current profile
 elif [[ "$sack__option" == "-rp" || "$sack__option" == "--renameprofile" ]]; then
     renameprofile $2
+    echo ""
     exit 0
 # Set new preset flags for current profile
 elif [[ "$sack__option" == "-sf" || "$sack__option" == "--setflags" ]]; then
@@ -256,6 +305,7 @@ elif [[ "$sack__option" == "-sf" || "$sack__option" == "--setflags" ]]; then
 # Set new preset search directory for current profile
 elif [[ "$sack__option" == "-sd" || "$sack__option" == "--setdir" ]]; then
     setdirectory $2
+    echo ""
     exit 0
 fi
 
@@ -277,7 +327,11 @@ fi
 # Announce start of sack:
 echo ""
 echo "============> running sack! <============"
-print_current_profile_info
+# Note that this is different from print_current_profile_info()
+echo ""
+echo "===> Profile: $sack__profile_name"
+echo "===> Using flags: $sack__flags"
+echo "===> Searching under: $sack__cwd"
 echo ""
 
 # The actual wrapper around ack

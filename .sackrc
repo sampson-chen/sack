@@ -59,9 +59,11 @@ sack__profile_preset_directory=~/src/
 # sack__beacon_tag_new_profiles
 
 # sack__beacon_tag_current_profile BEGIN
+#
 sack__profile_name=no_profile
 sack__profile_preset_flags=""
 sack__profile_preset_directory=""
+#
 # sack__beacon_tag_current_profile END
 
 # # # # # # # # # # # # # # # # # #

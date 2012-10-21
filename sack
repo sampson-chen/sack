@@ -262,6 +262,60 @@ setflags() {
     echo "Preset flags for profile \"$sack__profile_name\" now set to: $sack__new_flags" 
 }
 
+setdirectory() {
+    sack__new_directory=$1
+
+    # Validate that it is a valid directory path
+    if [[ ! -d "$sack__new_directory" ]]; then
+        echo ""
+        echo "===> Invalid directory path!"
+        return 1
+    fi
+
+    # Read the current profile directly from the config file to avoid sync issues
+    sack__current_profile_raw=$(cat $sack__config_path | grep -A 3 "# sack__beacon_tag_current_profile BEGIN")
+
+    # Get the current profile name
+    sack__profile_name=$(echo "$sack__current_profile_raw" | grep "sack__profile_name=" | sed -e "s/sack__profile_name=//")
+
+    # Disallow users to change flags for no_profile so they can always quickly
+    # access default behaviour of sack
+    if [[ "$sack__profile_name" == "no_profile" ]]; then
+        echo ""
+        echo "===> Preset directory is disabled for \"no_profile\"!"
+        return 1
+    fi
+    
+    # Get the preset flags for this profile entry
+    sack__profile_preset_flags=$(echo "$sack__current_profile_raw" | grep "sack__profile_preset_flags" | sed -e "s/sack__profile_preset_flags=//")
+
+    # Process the information that need to be written back to the config file
+    # into a temporary file so we don't have I/O conflict
+    cat $sack__config_path | awk -v replace_flag="sack__profile_name=$sack__profile_name" -v profile_preset_flags="$sack__profile_preset_flags" -v new_profile_preset_directory="$sack__new_directory" 'BEGIN {do_replace=0};
+        {
+            if ($0==replace_flag) {
+                do_replace=1;
+            } else if ($0=="#"){
+                do_replace=0;
+            }
+
+            if (do_replace==1 && $0==replace_flag) {
+                print replace_flag
+                print "sack__profile_preset_flags=" profile_preset_flags;
+                print "sack__profile_preset_directory=" new_profile_preset_directory;
+            } else if (do_replace==0) {
+                print $0
+            }
+        };' > $sack__config_path.tmp
+    # Swap the temp file into the config file to avoid I/O conflict
+    rm $sack__config_path
+    mv $sack__config_path.tmp $sack__config_path
+
+    echo ""
+    echo "===> sack: set directory <==="
+    echo "Preset directory for profile \"$sack__profile_name\" now set to: $sack__new_directory" 
+}
+
 # =============================================
 # ================ Script Main ================ 
 # =============================================
@@ -303,7 +357,7 @@ elif [[ "$sack__option" == "-sf" || "$sack__option" == "--setflags" ]]; then
     echo ""
     exit 0
 # Set new preset search directory for current profile
-elif [[ "$sack__option" == "-sd" || "$sack__option" == "--setdir" ]]; then
+elif [[ "$sack__option" == "-sd" || "$sack__option" == "--setdirectory" ]]; then
     setdirectory $2
     echo ""
     exit 0

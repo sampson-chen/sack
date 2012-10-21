@@ -9,7 +9,7 @@ s(hortcut)-ack: a faster way to use ack (and grep)!
 
 Open a terminal and run the following:
 
-    git clone git@github.com:sampson-chen/sack.git && cd sack && chmod +x install_sack.sh && source install_sack.sh
+    git clone git@github.com:sampson-chen/sack.git && cd sack && chmod +x install_sack.sh && ./install_sack.sh
 
 ## How to Use:
 
@@ -17,7 +17,7 @@ You can use sack in exactly the same way you currently use ack! Woot!
 
 For why sack is faster (and more fun!) to use, read on about its main / side features...
 
-## Main Feature:
+## Main Feature 1 - Shortcuts:
 
 sack prefixes shortcut tags to ack's search results:
 
@@ -44,8 +44,20 @@ The repetitive 10-15 sec chore has now been reduced to only 2 keystrokes (~1 sec
 
 (For why removing such distractions is important to coding "in the zone", see the excellent Joel Test: http://www.joelonsoftware.com/articles/fog0000000043.html)
 
-## Side Features:
+## Main Feature 2 - Profiles:
 
 Coming soon:
 
 - preset support for commonly used flags, directories, excludes
+
+## ToDo:
+
+Additional features / functionalities to be implemented:
+
+- Functionality for deleting a profile
+- Functionality for searching for multiple directories
+- Add information about profiles to README.md
+- Check that the user has ~/bin in their path
+- Add a check in `install_sack.sh` to also install ack if it's not already on the system.
+- Do decrement count for the little beginner msg (leaving this feature out for now)
+- Need to test partial results - could implement a check for how many matches the partial has, if it's more than 1, then cycle through them all until an exact one is found

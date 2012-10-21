@@ -27,27 +27,35 @@ sack__default_editor=vim
 # # # # # # sack profiles # # # # # #
 # (Note: do not edit the beacon tags)
 # sack__beacon_tag_profiles
+#
 sack__profile_name=no_profile
 sack__profile_preset_flags=""
 sack__profile_preset_directory=""
+#
 sack__profile_name=A
 sack__profile_preset_flags=""
 sack__profile_preset_directory=""
+#
 sack__profile_name=B
 sack__profile_preset_flags=""
 sack__profile_preset_directory=""
+#
 sack__profile_name=C
 sack__profile_preset_flags=""
 sack__profile_preset_directory=""
+#
 sack__profile_name=D
 sack__profile_preset_flags=""
 sack__profile_preset_directory=""
+#
 sack__profile_name=E
 sack__profile_preset_flags=""
 sack__profile_preset_directory=""
+#
 sack__profile_name=rb
 sack__profile_preset_flags=-i
 sack__profile_preset_directory=~/src/
+#
 # sack__beacon_tag_new_profiles
 
 # sack__beacon_tag_current_profile BEGIN

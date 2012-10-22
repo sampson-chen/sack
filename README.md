@@ -19,7 +19,7 @@ Here is why you should use ack over grep: http://betterthangrep.com/
 
 Open a terminal and run the following:
 
-    git clone git@github.com:sampson-chen/sack.git && cd sack && chmod +x install_sack.sh && ./install_sack.sh
+    git clone https://github.com/sampson-chen/sack.git && cd sack && chmod +x install_sack.sh && ./install_sack.sh
 
 ## How to Use:
 
@@ -151,7 +151,6 @@ Additional features / functionalities to be implemented:
 - Implement support for other editors (emacs, sublimeText etc)
 - Implement high-light for vim for the searchword when following a shortcut
 - Functionality for deleting a profile
-- Functionality for searching for multiple directories
 - Check that the user has ~/bin in their path
 - Add a check in `install_sack.sh` to also install ack if it's not already on the system.
 - Finish implementation for a decrement count for the beginner msg so it displays a certain number of times at the start

@@ -55,6 +55,12 @@ The repetitive 10-15 sec chore has now been reduced to only 2 keystrokes (~1 sec
 
 (For why removing such distractions is important to coding "in the zone", see the excellent Joel Test: http://www.joelonsoftware.com/articles/fog0000000043.html)
 
+### Cross-Terminal Shortcuts:
+
+Note that whenever you perform a search in any terminal with sack, you can use the shortcuts in all other terminals (including new ones).
+
+So now you can use one terminal to keep the search results open for reference, and use other terminals to open the files with shortcuts!
+
 ## Main Feature 2 - Profiles:
 
 About Profiles:
@@ -143,6 +149,7 @@ To show the current available profiles:
 Additional features / functionalities to be implemented:
 
 - Implement support for other editors (emacs, sublimeText etc)
+- Implement high-light for vim for the searchword when following a shortcut
 - Functionality for deleting a profile
 - Functionality for searching for multiple directories
 - Check that the user has ~/bin in their path

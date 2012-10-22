@@ -86,8 +86,8 @@ print_help() {
     echo ""
     echo "===> Add New Profile <==="
     echo "To add a new empty profile:"
-    echo "$sp sack -anp"
-    echo "$sp sack --addnewprofile"
+    echo "$sp sack -anp PROFILE_NAME"
+    echo "$sp sack --addnewprofile ReviewBoard"
     echo ""
     echo "===> List Profiles <==="
     echo "To show the current available profiles:"
@@ -176,8 +176,8 @@ switchprofile() {
         echo "===> Error: profile \"$sack__selected_profile\" is not found"
         echo ""
         echo "To create a new profile, do:"
-        echo "    sack --anp"
-        echo "    sack --addnewprofile"
+        echo "    sack --anp PROFILE_NAME"
+        echo "    sack --addnewprofile ReviewBoard"
         return 1 
     fi
 

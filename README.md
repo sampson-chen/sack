@@ -67,7 +67,7 @@ For example:
 
 will switch you to the "RB" profile. Now any searches via sack will run with this profile's preset flags (e.g. flags="-ia -A 2 -B 3") and under this profile's preset directories (e.g. directories="~/src/reviewboard/ ~/src/rbtools ~/src/djblets")
 
-Now suppose you are under some deep directory in terminal:
+Now suppose you are working under some deep directory in terminal:
 
     user@linux:~/src/reviewboard/reviewboard/reviews/management/commands/diffs$
 
@@ -142,10 +142,10 @@ To show the current available profiles:
 
 Additional features / functionalities to be implemented:
 
+- Implement support for other editors (emacs, sublimeText etc)
 - Functionality for deleting a profile
 - Functionality for searching for multiple directories
-- Add information about profiles to README.md
 - Check that the user has ~/bin in their path
 - Add a check in `install_sack.sh` to also install ack if it's not already on the system.
-- Do decrement count for the little beginner msg (leaving this feature out for now)
-- Need to test partial results - could implement a check for how many matches the partial has, if it's more than 1, then cycle through them all until an exact one is found
+- Finish implementation for a decrement count for the beginner msg so it displays a certain number of times at the start
+- (Suggest a feature that you want for sack!)

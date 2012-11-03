@@ -19,7 +19,7 @@ Here is why you should use ack over grep: http://betterthangrep.com/
 
 Open a terminal and run the following:
 
-    git clone git@github.com:sampson-chen/sack.git && cd sack && chmod +x install_sack.sh && ./install_sack.sh
+    git clone https://github.com/sampson-chen/sack.git && cd sack && chmod +x install_sack.sh && ./install_sack.sh
 
 ## How to Use:
 

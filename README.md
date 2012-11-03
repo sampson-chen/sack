@@ -49,7 +49,7 @@ Now, instead of having to spend time tediously navigating to some deep directory
 
     user@linux:~$ F 21
 
-And sack will open the file associated with that particular search result with your favorite editor (-cough-vim-cough-) and even go to the right line for you automatically. (It doesn't have to be "F", see config file for reassigning the shortcut command)
+And sack will open the file associated with that particular search result with your favorite editor (currently supports both vim and emacs: see ~/.sackrc after installation) and even go to the right line for you automatically. (It doesn't have to be "F", see config file for reassigning the shortcut command)
 
 The repetitive 10-15 sec chore has now been reduced to only 2 keystrokes (~1 second)!! More importantly, now you won't lose your train of throught from mentally context switching from the task at hand to deal with menial things like typing out a file path. Yay productivity!!
 
@@ -120,7 +120,7 @@ To set new preset flags to use for the current profile:
 (All searches run using this profile will use these flags)
 
     sack -sf NEW_FLAGS
-    sack --setflags
+    sack --setflags -ia -A 2 -B 3
  
 ### Set Directory
 
@@ -148,10 +148,9 @@ To show the current available profiles:
 
 Additional features / functionalities to be implemented:
 
-- Implement support for other editors (emacs, sublimeText etc)
+- Implement support for other editors (sublimeText etc)
 - Implement high-light for vim for the searchword when following a shortcut
 - Functionality for deleting a profile
-- Functionality for searching for multiple directories
 - Check that the user has ~/bin in their path
 - Add a check in `install_sack.sh` to also install ack if it's not already on the system.
 - Finish implementation for a decrement count for the beginner msg so it displays a certain number of times at the start

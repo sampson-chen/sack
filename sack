@@ -76,7 +76,7 @@ print_help() {
     echo "To set new preset flags to use for the current profile:"
     echo "(All searches run using this profile will use these flags)"
     echo "$sp sack -sf NEW_FLAGS"
-    echo "$sp sack --setflags"
+    echo "$sp sack --setflags -ia -A 2 -B 3"
     echo ""
     echo "===> Set Directory <==="
     echo "To set a new preset directory to use for the current profile:"
@@ -153,7 +153,7 @@ create_shortcut_cmd() {
     sack__shortcut_cmd_path=~/bin/$sack__shortcut_cmd
     echo "#!/bin/bash" > $sack__shortcut_cmd_path
     echo "sack__vim_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
-    echo "vim +\$sack__vim_shortcut" >> $sack__shortcut_cmd_path
+    echo "$sack__default_editor +\$sack__vim_shortcut" >> $sack__shortcut_cmd_path
     chmod +x $sack__shortcut_cmd_path
 }
 

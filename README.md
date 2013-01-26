@@ -1,9 +1,19 @@
-sack
-====
+sag / sack
+==========
 
-s(hortcut)-ack: a faster way to use ack (and grep)!
+s(hortcut)-ag/ack/grep: a faster way to use ag, ack, or grep!
 
-sack acts as a wrapper for ack to provide convenience for the repetitive menial tasks
+sag / sack / sgrep act as wrappers for ag / ack / grep to provide convenience for the repetitive menial tasks when searching through codebases via the command line.
+
+## What is ag?
+
+ag is a faster version of ack!\* 
+
+\*Out of the box, it includes some additional file that ack skips by default in its searches.
+
+To learn more about ag, and how to install it:
+
+    https://github.com/ggreer/the_silver_searcher
 
 ## What is ack?
 
@@ -23,13 +33,13 @@ Open a terminal and run the following:
 
 ## How to Use:
 
-You can use sack in exactly the same way you currently use ack! Woot!
+You can use sag / sack in exactly the same way you currently use ag / ack! Woot!
 
 For why sack is faster (and more fun!) to use, read on about its main / side features...
 
 ## Main Feature 1 - Shortcuts:
 
-sack prefixes shortcut tags to ack's search results:
+sag / sack prefixes shortcut tags to ag / ack's search results:
 
     user@linux:~/src$ sack thumbnail
 
@@ -148,6 +158,7 @@ To show the current available profiles:
 
 Additional features / functionalities to be implemented:
 
+- Implement sgrep (different syntax)
 - Implement support for other editors (sublimeText etc)
 - Implement high-light for vim for the searchword when following a shortcut
 - Functionality for deleting a profile

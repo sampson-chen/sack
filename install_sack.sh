@@ -23,4 +23,6 @@ fi
 
 cp $sack__install_cwd/sack $sack__install_main/
 chmod +x $sack__install_main/sack
+cp $sack__install_cwd/sag $sack__install_main/
+chmod +x $sack__install_main/sag
 cp $sack__install_cwd/.sackrc $sack__install_sackrc/

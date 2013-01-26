@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# @filename: sag
+#
+# @author: Sampson L. Chen (sampson-chen / slchen)
+# @date: 2013-01-25
+#
+# @description: 
+# s(hortcut)-ag - wrapper to use ag instead of ack as the
+# underlying search tool
+# 
+# For more details:
+# https://github.com/sampson-chen/sack
+# 
+# @dependencies:
+# - ag
+# - tee
+# - awk
+# - sed (GNU sed)
+# 
+# @version:
+# 1.0
+#
+# @license:
+# - MIT as of this version.
+#
+# @usage:
+# - for additional usage information, see README.md
+
+# ==============================================================
+# ==============================================================
+
+sack -ag $@

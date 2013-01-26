@@ -449,9 +449,26 @@ sack__file_name="                                              "
 # Deal with the options that only have to do with sack instead of ack
 sack__option=$1
 
+# By default, use ack:
+sack__default_tool=ack
+
+# Color parameter is different for ack / ag than for grep:
+sack__color_param='--color'
+
+echo "sack__option is: $sack__option"
+
+# Determine which search tool to use
+if [[ "$sack__option" == "-ag" ]]; then
+    sack__default_tool=ag
+    shift
+# Determine which search tool to use
+elif [[ "$sack__option" == "-grep" ]]; then
+    sack__default_tool='grep'
+    sack__color_param='--color=always'
+    shift
 # sack profiles - allow switching between different profiles
 # Show help printout
-if [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--help" || "$sack__option" == "--info" ]]; then
+elif [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--help" || "$sack__option" == "--info" ]]; then
     . $sack__config_path
     print_help
     echo ""
@@ -513,16 +530,17 @@ fi
 
 # Announce start of sack:
 echo ""
-echo "============> running sack! <============"
+echo "============> running $sack__default_tool! <============"
 # Note that this is different from print_current_profile_info()
 echo ""
 echo "===> Current Profile: $sack__profile_name"
 echo "===> Using flags: $sack__flags"
 echo "===> Searching under: $sack__cwd"
+echo "===> Searching parameters: $@"
 echo ""
 
 # The actual wrapper around ack
-ack --color $sack__flags $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
+$sack__default_tool $sack__color_param $sack__flags $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
 
 # Show usage instructions for first-time users; this can be turned off
 if [[ $sack__show_instructions -eq 0 ]]; then

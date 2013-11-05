@@ -134,13 +134,13 @@ process_shorcut_paths() {
 # colored output to stdout
 remove_escaped_chars() {
     # Need to do a check for the options allowed by sed
-	# Older (BSD/OS X) sed uses -E for extended regexps
-	# Newer (gnu/Linux) sed uses -r
+    # Older (BSD/OS X) sed uses -E for extended regexps
+    # Newer (gnu/Linux) sed uses -r
 
-	if echo "a" | sed -r s/a/b/ 1>/dev/null 2>&1
-	then
+    if echo "a" | sed -r s/a/b/ 1>/dev/null 2>&1
+    then
         sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
-	else
+    else
         sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
     fi
 }

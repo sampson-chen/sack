@@ -133,17 +133,16 @@ process_shorcut_paths() {
 # Remove the escaped characters that get piped from ack in order to preserve
 # colored output to stdout
 remove_escaped_chars() {
-    # Need to do a check for the OS, because Linux uses a different sed
-    # than OS X
+    # Need to do a check for the options allowed by sed
+	# Older (BSD/OS X) sed uses -E for extended regexps
+	# Newer (gnu/Linux) sed uses -r
 
-    # Linux
-    if [[ $sack__OS == "Linux" ]]; then
+	if echo "a" | sed -r s/a/b/ 1>/dev/null 2>&1
+	then
         sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
-    # OS X
-    elif [[ $sack__OS == "Darwin" ]]; then
+	else
         sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
     fi
-    # @todo: implement support for other OSes at a later date
 }
 
 # Create the actual shortcut command to be used across terminals / shell sessions

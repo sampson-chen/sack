@@ -188,7 +188,7 @@ switchprofile() {
         echo "===> Error: profile \"$sack__selected_profile\" is not found"
         echo ""
         echo "To create a new profile, do:"
-        echo "    sack --anp PROFILE_NAME"
+        echo "    sack -anp PROFILE_NAME"
         echo "    sack --addnewprofile ReviewBoard"
         return 1 
     fi

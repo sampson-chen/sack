@@ -147,13 +147,25 @@ remove_escaped_chars() {
 }
 
 # Create the actual shortcut command to be used across terminals / shell sessions
-create_shortcut_cmd() {
+create_shortcut_cmd_vim() {
     # @todo: add support for other editors as well
     # The following literally writes the shorcut command and makes it executable
     sack__shortcut_cmd_path=~/bin/$sack__shortcut_cmd
     echo "#!/bin/bash" > $sack__shortcut_cmd_path
     echo "sack__vim_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
     echo "$sack__default_editor +\$sack__vim_shortcut" >> $sack__shortcut_cmd_path
+    chmod +x $sack__shortcut_cmd_path
+}
+
+# Open shortcut using sublime rsub (https://github.com/henrikpersson/rsub)
+create_shortcut_cmd_rsub() {
+
+    sack__shortcut_cmd_path=~/bin/$sack__shortcut_cmd
+    echo "#!/bin/bash" > $sack__shortcut_cmd_path
+    echo "sack__rsub_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
+    echo "fp=\`echo \$sack__rsub_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
+    echo "ln=\`echo \$sack__rsub_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
+    echo "$sack__default_editor -l \$ln \$fp" >> $sack__shortcut_cmd_path
     chmod +x $sack__shortcut_cmd_path
 }
 
@@ -553,4 +565,10 @@ else
     echo ""
 fi
 
-create_shortcut_cmd
+if [ $sack__default_editor == 'vim' ]; then
+    create_shortcut_cmd_vim
+elif [ $sack__default_editor == 'rsub' ]; then
+    create_shortcut_cmd_rsub
+else
+    echo "Error: unsupported default editor specified in sack__default_editor"
+fi

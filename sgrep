@@ -31,4 +31,4 @@
 # ==============================================================
 
 # Warning: sgrep is not yet fully implemented
-sack -grep $@
+sack -grep "$@"

@@ -112,11 +112,11 @@ display_shortcuts() {
         };
         printf("[%s] ", x);
         printf("%s", $2);
-        for (i=3; i<=NF; i++) {
+        for (i=3; i<=NF; ++i) {
             printf(":%s", $i);
         }
         printf("\n");
-        x++;
+        ++x;
     };'
 }
 
@@ -461,11 +461,13 @@ echo "sack__option is: $sack__option"
 if [[ "$sack__option" == "-ag" ]]; then
     sack__default_tool=ag
     shift
+    sack__option=$1
 # Determine which search tool to use
 elif [[ "$sack__option" == "-grep" ]]; then
     sack__default_tool='grep'
     sack__color_param='--color=always'
     shift
+    sack__option=$1
 # sack profiles - allow switching between different profiles
 # Show help printout
 elif [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--help" || "$sack__option" == "--info" ]]; then
@@ -473,7 +475,8 @@ elif [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--h
     print_help
     echo ""
     exit 0
-elif [[ "$sack__option" == "-wp" || "$sack__option" == "--whichprofile" ]]; then
+fi
+if [[ "$sack__option" == "-wp" || "$sack__option" == "--whichprofile" ]]; then
     . $sack__config_path
     print_current_profile_info
     echo ""
@@ -526,6 +529,9 @@ else
     sack__cwd="$sack__profile_preset_directory"
     # Add automatic tilda expansion if it's not in already
     sack__cwd=$(eval "echo $sack__cwd")
+    if [[ -z "$sack__cwd" ]]; then
+        sack__cwd=$(pwd)
+    fi
 fi
 
 # Announce start of sack:

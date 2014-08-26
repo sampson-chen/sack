@@ -125,7 +125,7 @@ if [[ "$sack__option" == "-ag" ]]; then
     shift
 # Determine which search tool to use
 elif [[ "$sack__option" == "-grep" ]]; then
-    sack__default_tool='grep -r -I'
+    sack__default_tool='grep -r -I -n'
     sack__color_param='--color=always'
     shift
 # Show help printout

@@ -39,7 +39,6 @@ sack_print_help() {
     echo "  F [line_no] to open file at line [line_no]"
     echo ""
     echo "-ag   to use ag"
-    echo "-ack  to use ack"
     echo "-grep to use grep"
     echo ""
 }

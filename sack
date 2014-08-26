@@ -96,7 +96,7 @@ remove_escaped_chars() {
 
 
 # =============================================
-# ================ Script Main ================
+# ================ Main Script ================
 # =============================================
 
 # Deal with the options that only have to do with sack instead of ack
@@ -106,7 +106,7 @@ sack__default_tool=ack
 # Variable(s) to remove magic values from the code
 sack__dev_null=/dev/null
 # Color parameter is different for ack / ag than for grep:
-if [ -v $SACK_COLORS ]; then
+if [ -z "$SACK_COLORS" ]; then
     sack__color_param=$SACK_COLORS
 else
     sack__color_param='--color'
@@ -138,8 +138,6 @@ elif [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--h
     echo ""
     exit 0
 fi
-
-
 
 # The actual wrapper around ack, ag or grep
 $sack__default_tool $sack__color_param "$@" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)

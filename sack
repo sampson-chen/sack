@@ -2,11 +2,11 @@
 #
 # @filename: sack
 #
-# @author: Sampson L. Chen (sampson-chen / slchen)
-# @date: 2012-10-14
+# @author: largely inspired from Sampson L. Chen (sampson-chen / slchen)
+# @date: 2012--2014
 #
 # @description:
-# s(hortcut)-ack - a faster way to use ack (or grep)!
+# s(hortcut)-ack - a faster way to use ack (ag or grep)!
 #
 # For more details:
 # https://github.com/sampson-chen/sack
@@ -31,69 +31,17 @@
 
 # Script Functions
 
-# Print information about the current profile
-print_current_profile_info() {
-    echo ""
-    echo "===> Current Profile: $sack__profile_name"
-    echo "===> Using flags: $sack__profile_preset_flags"
-    echo "===> Searching under: $sack__profile_preset_directory"
-}
-
 # Print help / usage information about sack
-print_help() {
-    sp="   " # space
+sack_print_help() {
+    echo "usage sack: [options] pattern [path]"
     echo ""
-    echo "===============> sack Usage Information <==============="
+    echo "Wrapper around ag, ack or grep"
+    echo "  F [line_no] to open file at line [line_no]"
     echo ""
-    echo "===> To print this message: <==="
-    echo "$sp sack"
-    echo "$sp sack -h"
-    echo "$sp sack --help"
-    echo "$sp sack --info"
+    echo "-ag   to use ag"
+    echo "-ack  to use ack"
+    echo "-grep to use grep"
     echo ""
-    echo "===> To learn more about ack: <==="
-    echo "$sp ack --help"
-    echo "$sp man ack-grep"
-    echo ""
-    echo "========> sack-specific commands <========"
-    echo ""
-    echo "===> Which Profile? <==="
-    echo "To find out which profile you are currently on:"
-    echo "$sp sack -wp"
-    echo "$sp sack --whichprofile"
-    echo ""
-    echo "===> Switch Profile <==="
-    echo "To switch to a different profile:"
-    echo "$sp sack -sp PROFILE_NAME"
-    echo "$sp sack --switchprofile no_profile"
-    echo ""
-    echo "===> Rename Profile <==="
-    echo "To rename the current profile:"
-    echo "$sp sack -rp NEW_PROFILE_NAME"
-    echo "$sp sack --renameprofile reviewboard"
-    echo ""
-    echo "===> Set Flags <==="
-    echo "To set new preset flags to use for the current profile:"
-    echo "(All searches run using this profile will use these flags)"
-    echo "$sp sack -sf NEW_FLAGS"
-    echo "$sp sack --setflags -ia -A 2 -B 3"
-    echo ""
-    echo "===> Set Directory <==="
-    echo "To set a new preset directory to use for the current profile:"
-    echo "(All searches will be run under this directory with this profile)"
-    echo "$sp sack -sd NEW_DIRECTORY"
-    echo "$sp sack --setdirectory ~/src/reviewboard"
-    echo ""
-    echo "===> Add New Profile <==="
-    echo "To add a new empty profile:"
-    echo "$sp sack -anp PROFILE_NAME"
-    echo "$sp sack --addnewprofile ReviewBoard"
-    echo ""
-    echo "===> List Profiles <==="
-    echo "To show the current available profiles:"
-    echo "$sp sack -lp"
-    echo "$sp sack --listprofiles"
-    print_current_profile_info
 }
 
 # Prefixes a shortcut tag to relevant output lines.

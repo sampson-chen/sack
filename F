@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Editor: if SACK_EDITOR is not defined, take the default editor.
-if [ -v $SACK_EDITOR ]; then
+if [ -v SACK_EDITOR ]; then
     editor=$SACK_EDITOR
 else
     editor=$EDITOR
@@ -9,7 +9,7 @@ fi
 
 # Sack shortcut file. '.~/.sack_shortcurt' if the variable SACK_SHORTCUT is not
 # defined.
-if [ -v $SACK_SHORTCUT ]; then
+if [ -v SACK_SHORTCUT ]; then
     sack_shortcutfile=$SACK_SHORTCUT
 else
     sack_shortcutfile=~/.sack_shortcuts

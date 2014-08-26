@@ -51,7 +51,7 @@ display_shortcuts() {
     # We could have restored the default look for ack with the --group option, but
     # it turns out that this is actually simpler to parse with --nogroup and then
     # reformat the output to match the --group formats.
-    awk -v f_name=$sack__file_name -F':' '
+    awk -v f_name="" -F':' '
     BEGIN {x=1};
     {
         if ($1 != f_name) {
@@ -108,9 +108,6 @@ create_shortcut_cmd() {
 # =============================================
 # ================ Script Main ================
 # =============================================
-
-# Initializing the variable for checking different file names
-sack__file_name="                                              "
 
 # Deal with the options that only have to do with sack instead of ack
 sack__option=$1

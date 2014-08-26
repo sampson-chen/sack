@@ -130,11 +130,9 @@ elif [[ "$sack__option" == "-grep" ]]; then
     sack__default_tool='grep -r -I'
     sack__color_param='--color=always'
     shift
-# sack profiles - allow switching between different profiles
 # Show help printout
 elif [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--help" || "$sack__option" == "--info" ]]; then
-    . $sack__config_path
-    print_help
+    sack_print_help
     echo ""
     exit 0
 fi

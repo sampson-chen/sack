@@ -110,5 +110,6 @@ three (optional) environment variables:
 - `SACK_SHORTCUT`: the path to the file where sack stores `lineno:
   filepath`. It's `~/.sack_shortcuts` by default. This variable is used in both
   `sack` and `F` scripts.
-- `SACK_EDITOR`: editor used to open file with the `F` script
+- `SACK_EDITOR`: editor used to open file with the `F` script. Use the `EDITOR`
+  environment variable by default if `SACK_EDITOR` is not defined.
 - `SACK_COLORS`: special colors parameters

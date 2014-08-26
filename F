@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Editor: if SACK_EDITOR is not defined, take the default editor.
+if [ -v $SACK_EDITOR ]; then
+    editor=$SACK_EDITOR
+else
+    editor=$EDITOR
+fi
+
+# Sack shortcut file. '.~/.sack_shortcurt' if the variable SACK_SHORTCUT is not
+# defined.
+if [ -v $SACK_SHORTCUT ]; then
+    sack_shortcutfile=$SACK_SHORTCUT
+else
+    sack_shortcutfile=~/.sack_shortcuts
+fi
+
+if [ -f $sack_shortcut ]; then
+    $EDITOR +`sed -n "$1p" < $sack_shortcutfile`
+else
+    echo "Sack shortcuts file '~/.sack_shortcuts' not found."
+    echo "Please define the env. variable SACK_SHORTCUT or check if the file exist."
+    exit 0
+fi

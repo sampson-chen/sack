@@ -86,10 +86,10 @@ remove_escaped_chars() {
 
     # Linux
     if [[ `uname` == "Linux" ]]; then
-        sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
+        sed -r "s/\[([0-9]{1,2}(;[0-9]{1,2}){0,2})?[m|K]//g"
     # OS X
     elif [[ `uname` == "Darwin" ]]; then
-        sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
+        sed -E "s/\[([0-9]{1,2}(;[0-9]{1,2}){0,2})?[m|K]//g"
     fi
     # @todo: implement support for other OSes at a later date
 }

@@ -106,12 +106,11 @@ sack__default_tool=ack
 # Variable(s) to remove magic values from the code
 sack__dev_null=/dev/null
 # Color parameter is different for ack / ag than for grep:
-if [ -z "$SACK_COLORS" ]; then
+if [ -n "$SACK_COLORS" ]; then
     sack__color_param=$SACK_COLORS
 else
     sack__color_param='--color'
 fi
-
 
 # Sack shortcut file. '.~/.sack_shortcurt' if the variable SACK_SHORTCUT is not
 # defined.

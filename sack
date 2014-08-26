@@ -15,7 +15,6 @@
 # - ack (http://betterthangrep.com/)
 # - tee
 # - awk
-# - sed (GNU sed)
 #
 # @version:
 # 1.0
@@ -73,24 +72,9 @@ process_shorcut_paths() {
     # Using : as the delimiter here should be fine, because : is not used in file names
     awk -F':' '
     {
+        gsub(/\[([0-9]{0,2}(;[0-9]{0,2}){0,2})?[m|K]/, "", $0);
         print $2 " " $1;
     };'
-}
-
-# Remove the escaped characters that get piped from ack in order to preserve
-# colored output to stdout
-remove_escaped_chars() {
-    # Need to do a check for the OS, because Linux uses a different sed
-    # than OS X
-
-    # Linux
-    if [[ `uname` == "Linux" ]]; then
-        sed -r "s/\[([0-9]{1,2}(;[0-9]{1,2}){0,2})?[m|K]//g"
-    # OS X
-    elif [[ `uname` == "Darwin" ]]; then
-        sed -E "s/\[([0-9]{1,2}(;[0-9]{1,2}){0,2})?[m|K]//g"
-    fi
-    # @todo: implement support for other OSes at a later date
 }
 
 
@@ -136,5 +120,5 @@ elif [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--h
 fi
 
 # The actual wrapper around ack, ag or grep
-$sack__default_tool $sack__color_param "$@" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
+$sack__default_tool $sack__color_param "$@" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths > $sack__shortcut_file)
 

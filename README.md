@@ -7,7 +7,7 @@ sag / sack / sgrep act as wrappers for ag / ack / grep to provide convenience fo
 
 ## What is ag?
 
-ag is a faster version of ack!\* 
+ag is a faster version of ack!\*
 
 \*Out of the box, it includes some additional file that ack skips by default in its searches.
 
@@ -109,21 +109,21 @@ To find out which profile you are currently on:
 
     sack -wp
     sack --whichprofile
- 
+
 ### Switch Profile
 
 To switch to a different profile (`no_profile` is the empty profile):
 
     sack -sp PROFILE_NAME
     sack --switchprofile no_profile
- 
+
 ### Rename Profile
 
 To rename the current profile:
 
     sack -rp NEW_PROFILE_NAME
     sack --renameprofile ReviewBoard
- 
+
 ### Set Flags
 
 To set new preset flags to use for the current profile:
@@ -131,7 +131,7 @@ To set new preset flags to use for the current profile:
 
     sack -sf NEW_FLAGS
     sack --setflags -ia -A 2 -B 3
- 
+
 ### Set Directory
 
 To set new preset directory(s) to use for the current profile:
@@ -139,14 +139,14 @@ To set new preset directory(s) to use for the current profile:
 
     sack -sd DIRECTORY_1 DIRECTORY_2 DIRECTORY_3
     sack --setdirectory ~/src/reviewboard ~/src/rbtools ~/src/djblets
- 
+
 ### Add New Profile
 
 To add a new empty profile:
 
     sack -anp PROFILE_NAME
     sack --addnewprofile ReviewBoard
- 
+
 ### List Profiles
 
 To show the current available profiles:

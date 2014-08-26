@@ -16,7 +16,7 @@ else
 fi
 
 if [ -f $sack_shortcut ]; then
-    $EDITOR +`sed -n "$1p" < $sack_shortcutfile`
+    $editor +`sed -n "$1p" < $sack_shortcutfile`
 else
     echo "Sack shortcuts file '~/.sack_shortcuts' not found."
     echo "Please define the env. variable SACK_SHORTCUT or check if the file exist."

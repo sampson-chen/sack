@@ -98,7 +98,7 @@ fi
 
 # Sack shortcut file. '.~/.sack_shortcurt' if the variable SACK_SHORTCUT is not
 # defined.
-if [ -v SACK_SHORTCUT ]; then
+if [ ! -z ${SACK_SHORTCUT+x} ]; then
     sack__shortcut_file=$SACK_SHORTCUT
 else
     sack__shortcut_file=~/.sack_shortcuts

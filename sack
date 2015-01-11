@@ -159,6 +159,8 @@ create_shortcut_cmd() {
 
     if [[ $sack__default_editor == vi* ]] || [[ $sack__default_editor == emacs* ]]; then
         echo "$sack__default_editor +\${sack__editor_shortcut[0]} \${sack__editor_shortcut[1]}" >> $sack__shortcut_cmd_path
+    elif [[ $sack__default_editor == subl* ]]; then
+        echo "$sack__default_editor \${sack__editor_shortcut[1]}:\${sack__editor_shortcut[0]} &" >> $sack__shortcut_cmd_path
     fi
 
     chmod +x $sack__shortcut_cmd_path

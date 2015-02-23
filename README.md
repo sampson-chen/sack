@@ -102,6 +102,10 @@ the shortcuts in all other terminals (including new ones).
 So now you can use one terminal to keep the search results open for reference,
 and use other terminals to open the files with shortcuts!
 
+## Screenshot
+
+![sag Screenshot](https://github.com/garaud/sack/raw/master/screenshot.png)
+
 ## How to Configure it?
 
 I drop all the reference to the configuration file `.sackrc`. There are just
@@ -120,3 +124,4 @@ This is an example with Emacs and a colored ag:
 export SACK_EDITOR="emacsclient -n"
 export SACK_COLORS='--color --color-line-number=1;35;40 --color-path=1;34;40 --color-match=1;4;31;40'
 ```
+

@@ -113,3 +113,10 @@ three (optional) environment variables:
 - `SACK_EDITOR`: editor used to open file with the `F` script. Use the `EDITOR`
   environment variable by default if `SACK_EDITOR` is not defined.
 - `SACK_COLORS`: special colors parameters
+
+This is an example with Emacs and a colored ag:
+
+```bash
+export SACK_EDITOR="emacsclient -n"
+export SACK_COLORS='--color --color-line-number=1;35;40 --color-path=1;34;40 --color-match=1;4;31;40'
+```

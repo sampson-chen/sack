@@ -267,7 +267,7 @@ renameprofile() {
 }
 
 setflags() {
-    sack__new_flags=$@
+    sack__new_flags="$@"
     # Read the current profile directly from the config file to avoid sync issues
     sack__current_profile_raw=$(cat $sack__config_path | grep -A 4 "# sack__beacon_tag_current_profile BEGIN")
 
@@ -315,7 +315,7 @@ setflags() {
 }
 
 setdirectory() {
-    sack__new_directories=$@
+    sack__new_directories="$@"
 
     # Validate the list of all directories passed in
     for sack__new_directory in $sack__new_directories
@@ -491,13 +491,13 @@ elif [[ "$sack__option" == "-rp" || "$sack__option" == "--renameprofile" ]]; the
 # Set new preset flags for current profile
 elif [[ "$sack__option" == "-sf" || "$sack__option" == "--setflags" ]]; then
     shift
-    setflags $@
+    setflags "$@"
     echo ""
     exit 0
 # Set new preset search directory for current profile
 elif [[ "$sack__option" == "-sd" || "$sack__option" == "--setdirectory" ]]; then
     shift
-    setdirectory $@
+    setdirectory "$@"
     echo ""
     exit 0
 # Add a new profile
@@ -540,7 +540,7 @@ echo "===> Searching parameters: $@"
 echo ""
 
 # The actual wrapper around ack
-$sack__default_tool $sack__color_param $sack__flags $@ $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
+$sack__default_tool $sack__color_param $sack__flags "$@" $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
 
 # Show usage instructions for first-time users; this can be turned off
 if [[ $sack__show_instructions -eq 0 ]]; then

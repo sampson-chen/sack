@@ -15,8 +15,19 @@ else
     sack_shortcutfile=~/.sack_shortcuts
 fi
 
+# Get the line number and the file name
+_sack_line=`sed -n "$1p" < $sack_shortcutfile`
+_lineno=`echo $_sack_line | awk '{ print $1 }'`
+_fname=`echo $_sack_line | awk '{ print $2 }'`
+
 if [ -f $sack_shortcut ]; then
-    $editor +`sed -n "$1p" < $sack_shortcutfile`
+    # SublimeText
+    if [[ "$editor" =~ 'subl' ]]; then
+        subl $_fname:$_lineno
+    # Emacs & Vim
+    else
+        $editor +$_lineno $_fname
+    fi
 else
     echo "Sack shortcuts file '~/.sack_shortcuts' not found."
     echo "Please define the env. variable SACK_SHORTCUT or check if the file exist."

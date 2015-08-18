@@ -118,10 +118,21 @@ three (optional) environment variables:
   environment variable by default if `SACK_EDITOR` is not defined.
 - `SACK_COLORS`: special colors parameters
 
-This is an example with Emacs and a colored ag:
+This is an example with Emacs and a colored `ag`:
 
 ```bash
 export SACK_EDITOR="emacsclient -n"
 export SACK_COLORS='--color --color-line-number=1;35;40 --color-path=1;34;40 --color-match=1;4;31;40'
 ```
 
+## Editors
+
+For now, you can use the script `F` to open a file at a specific line with:
+
+* Emacs
+* Vim
+* SublimeText
+* Other editors which are be able to open a file with this syntax `+lineno
+  filename`
+
+Please configure the `$SACK_EDITOR` if you needed.

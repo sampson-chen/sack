@@ -138,10 +138,10 @@ remove_escaped_chars() {
 
     # Linux
     if [[ $sack__OS == "Linux" ]]; then
-        sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
+        sed -r "s/\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
     # OS X
     elif [[ $sack__OS == "Darwin" ]]; then
-        sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
+        sed -E "s/\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
     fi
     # @todo: implement support for other OSes at a later date
 }

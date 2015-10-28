@@ -126,7 +126,7 @@ process_shorcut_paths() {
     # Using : as the delimiter here should be fine, because : is not used in file names
     awk -F':' '
     {
-        print $2 " " $1;
+        print xxx$2 " " yyy$1;
     };'
 }
 
@@ -154,12 +154,14 @@ create_shortcut_cmd_vim() {
     cat > $sack__shortcut_cmd_path <<SHORTCUT
 #!/bin/bash
 sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_file)
+sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
+sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
 if [ -z "\$EDITOR" ]; then
     sack__editor="$sack__default_editor"
 else
     sack__editor="\$EDITOR"
 fi
-\$sack__editor +\$sack__vim_shortcut
+\$sack__editor +\$sack__line "\$sack__file"
 SHORTCUT
     chmod +x $sack__shortcut_cmd_path
 }

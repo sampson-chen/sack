@@ -126,7 +126,7 @@ process_shorcut_paths() {
     # Using : as the delimiter here should be fine, because : is not used in file names
     awk -F':' '
     {
-        print xxx$2 " " yyy$1;
+        print $2 " " $1;
     };'
 }
 

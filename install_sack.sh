@@ -25,4 +25,19 @@ cp $sack__install_cwd/sack $sack__install_main/
 chmod +x $sack__install_main/sack
 cp $sack__install_cwd/sag $sack__install_main/
 chmod +x $sack__install_main/sag
-cp $sack__install_cwd/.sackrc $sack__install_sackrc/
+
+if [[ -f "$sack__install_sackrc/.sackrc" ]]; then
+    echo >&2
+    echo "It seems you already have a ~/.sackrc." >&2
+    echo >&2
+    echo "Overwrite this with a fresh copy from the source distribution" >&2
+    echo "(losing your customizations)?" >&2
+    echo >&2
+    read -p "(Ctrl+C to quit) y/[N]? " ANS
+    if [[ $ANS =~ ^[Yy] ]]; then
+        cp $sack__install_cwd/.sackrc $sack__install_sackrc/
+    else
+        echo
+        echo "Okay, not overwriting your existing ~/.sackrc."
+    fi
+fi

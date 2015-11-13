@@ -21,6 +21,13 @@ if [[ ! -d "$sack__install_main" ]]; then
     mkdir $sack__install_main
 fi
 
+# If ack is not installed, install it
+if [[ `which ack | wc -l` -eq 0 ]]; then
+    curl -L http://betterthangrep.com/ack-standalone > ~/bin/ack && chmod 0755 ~/bin/ack
+fi
+
+# No install script for ag, so let it be a TODO
+
 cp $sack__install_cwd/sack $sack__install_main/
 chmod +x $sack__install_main/sack
 cp $sack__install_cwd/sag $sack__install_main/

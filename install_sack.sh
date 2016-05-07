@@ -23,7 +23,7 @@ fi
 
 # If ack is not installed, install it
 if [[ `which ack | wc -l` -eq 0 ]]; then
-    curl -L http://betterthangrep.com/ack-standalone > ~/bin/ack && chmod 0755 ~/bin/ack
+    curl -L http://betterthangrep.com/ack-standalone > $sack__install_main/ack && chmod 0755 $sack__install_main/ack
 fi
 
 # No install script for ag, so let it be a TODO

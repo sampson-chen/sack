@@ -150,7 +150,7 @@ remove_escaped_chars() {
 create_shortcut_cmd_vim() {
     # @todo: add support for other editors as well
     # The following literally writes the shorcut command and makes it executable
-    sack__shortcut_cmd_path=~/bin/$sack__shortcut_cmd
+    sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
     cat > $sack__shortcut_cmd_path <<SHORTCUT
 #!/bin/bash
 sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_file)
@@ -169,7 +169,7 @@ SHORTCUT
 # Open shortcut using sublime rsub (https://github.com/henrikpersson/rsub)
 create_shortcut_cmd_rsub() {
 
-    sack__shortcut_cmd_path=~/bin/$sack__shortcut_cmd
+    sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
     echo "#!/bin/bash" > $sack__shortcut_cmd_path
     echo "sack__rsub_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
     echo "fp=\`echo \$sack__rsub_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path

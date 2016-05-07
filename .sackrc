@@ -6,8 +6,9 @@
 # @description
 # - Configuration file for sack
 
-# The shortcut command is F, as in (F)ollow
+# The shortcut command is F, as in (F)ollow and path
 sack__shortcut_cmd=F
+sack__shortcut_path=~/bin
 
 # File to store the shortcuts so they can be used across terminal / shell sessions
 sack__shortcut_file=~/.sack_shortcuts

@@ -24,7 +24,18 @@ fi
 
 # If ack is not installed, install it
 if [[ `which ack | wc -l` -eq 0 ]]; then
-    curl -L http://betterthangrep.com/ack-standalone > $sack__install_main/ack && chmod 0755 $sack__install_main/ack
+    echo "Downloading 'ack' to '$sack__install_main/ack'..."
+    # FIXME: https
+    curl -s -L http://betterthangrep.com/ack-standalone \
+        > $sack__install_main/ack && chmod 0755 $sack__install_main/ack
+
+    if (( $? )); then
+        echo
+        echo "ACK! There was a problem downloading 'ack' from betterthangrep.com" >&2
+        echo "     Bailing out." >&2
+        echo
+        exit 1
+    fi
 fi
 
 # No install script for ag, so let it be a TODO

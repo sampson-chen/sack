@@ -58,14 +58,14 @@ if [[ -f "$sack__install_sackrc/.sackrc" ]]; then
     read -p "(Ctrl+C to quit) y/[N]? " ANS
     if [[ $ANS =~ ^[Yy] ]]; then
         echo
-        echo "Overwriting your existing rcfile at '$sack__install_main/.sackrc'..."
+        echo "Overwriting your existing rcfile at '$sack__install_sackrc/.sackrc'..."
         cp "$sack__install_cwd/.sackrc" "$sack__install_sackrc"
     else
         echo
         echo "Okay, not overwriting your existing .sackrc."
     fi
 else
-    echo "Creating new rcfile at '$sack__install_main/.sackrc'..."
+    echo "Creating new rcfile at '$sack__install_sackrc/.sackrc'..."
     cp "$sack__install_cwd/.sackrc" "$sack__install_sackrc"
 fi
 

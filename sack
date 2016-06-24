@@ -161,7 +161,7 @@ if [ -z "\$EDITOR" ]; then
 else
     sack__editor="\$EDITOR"
 fi
-\$sack__editor +\$sack__line \""\$sack__file\""
+\$sack__editor +\$sack__line "\$sack__file"
 SHORTCUT
     chmod +x $sack__shortcut_cmd_path
 }
@@ -174,25 +174,8 @@ create_shortcut_cmd_rsub() {
     echo "sack__rsub_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
     echo "fp=\`echo \$sack__rsub_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
     echo "ln=\`echo \$sack__rsub_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
-    echo "$sack__default_editor -l \$ln \"\$fp\"" >> $sack__shortcut_cmd_path
+    echo "$sack__default_editor -l \$ln \$fp" >> $sack__shortcut_cmd_path
     chmod +x $sack__shortcut_cmd_path
-}
-
-# Open shortcut using emacs
-create_shortcut_cmd_emacs() {
-
-    sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
-    echo "#!/bin/bash" > $sack__shortcut_cmd_path
-    echo "sack__emacs_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
-    echo "fp=\`echo \$sack__emacs_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
-    echo "ln=\`echo \$sack__emacs_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
-    echo "$sack__default_editor +\$ln \"\$fp\"" >> $sack__shortcut_cmd_path
-    chmod +x $sack__shortcut_cmd_path
-}
-
-# Open shortcut using emacsclient
-create_shortcut_cmd_emacsclient() { 
-   create_shortcut_cmd_emacs $@
 }
 
 # Switch to a different profile
@@ -568,20 +551,23 @@ fi
 
 # Announce start of sack:
 echo ""
-#echo "============> running $sack__default_tool! <============"
+echo "============> running $sack__default_tool! <============"
 # Note that this is different from print_current_profile_info()
-#echo ""
-#echo "===> Current Profile: $sack__profile_name"
-#echo "===> Using flags: $sack__flags"
-#echo "===> Searching under: $sack__cwd"
-#echo "===> Searching parameters: $@"
-#echo ""
+echo ""
+echo "===> Current Profile: $sack__profile_name"
+echo "===> Using flags: $sack__flags"
+echo "===> Searching under: $sack__cwd"
+echo "===> Searching parameters: $@"
+echo ""
 
 # The actual wrapper around ack
 $sack__default_tool $sack__color_param $sack__flags "$@" "$sack__cwd" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
 
 # Show usage instructions for first-time users; this can be turned off
-if [[ $sack__show_instructions -ne 0 ]]; then
+if [[ $sack__show_instructions -eq 0 ]]; then
+    # do nothing
+    echo ""
+else 
     echo ""
     echo "===== Use: \"$sack__shortcut_cmd #\" to go directly to the search result!"
     echo "===== Example: ( user@linux:~$ $sack__shortcut_cmd 25 )"
@@ -592,10 +578,6 @@ if [ $sack__default_editor == 'vim' ]; then
     create_shortcut_cmd_vim
 elif [ $sack__default_editor == 'rsub' ]; then
     create_shortcut_cmd_rsub
-elif [ $sack__default_editor == 'emacs' ]; then
-    create_shortcut_cmd_emacs
-elif [ $sack__default_editor == 'emacsclient' ]; then
-    create_shortcut_cmd_emacsclient
 else
     echo "Error: unsupported default editor specified in sack__default_editor"
 fi

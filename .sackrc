@@ -22,7 +22,7 @@ sack__dev_null=/dev/null
 # Determine the OS
 sack__OS=$(uname)
 
-# @todo: add support for editors other than vim, rsub (sublime), emacs, emacsclient
+# @todo: add support for editors other than vim and emacs
 sack__default_editor=vim
 
 # # # # # # sack profiles # # # # # #

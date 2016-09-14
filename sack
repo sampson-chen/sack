@@ -574,7 +574,7 @@ else
     echo ""
 fi
 
-if [ $sack__default_editor == 'vim' ]; then
+if [ $sack__default_editor == 'vim' -o $sack__default_editor == 'gvim' ]; then
     create_shortcut_cmd_vim
 elif [ $sack__default_editor == 'rsub' ]; then
     create_shortcut_cmd_rsub

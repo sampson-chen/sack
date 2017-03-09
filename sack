@@ -160,7 +160,7 @@ else
     sack__editor="\$EDITOR"
 fi
 num_fields=\`head -n 1 $sack__shortcut_file | awk '{ print NF }'\`
-if [ \${num_fields} -eq 2 ]; then
+if [ \${num_fields} -ge 2 ]; then
 	sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
 	sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
 	\$sack__editor +\$sack__line "\$sack__file"

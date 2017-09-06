@@ -153,7 +153,7 @@ create_shortcut_cmd_vim() {
     sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
     cat > $sack__shortcut_cmd_path <<SHORTCUT
 #!/bin/bash
-sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_file)
+sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_dir/\$PPID)
 sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
 sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
 if [ -z "\$EDITOR" ]; then
@@ -171,7 +171,7 @@ create_shortcut_cmd_rsub() {
 
     sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
     echo "#!/bin/bash" > $sack__shortcut_cmd_path
-    echo "sack__rsub_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
+    echo "sack__rsub_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_dir/$PPID)" >> $sack__shortcut_cmd_path
     echo "fp=\`echo \$sack__rsub_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
     echo "ln=\`echo \$sack__rsub_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
     echo "$sack__default_editor -l \$ln \$fp" >> $sack__shortcut_cmd_path
@@ -561,6 +561,9 @@ else
     sack__cwd=$(eval "echo $sack__cwd")
 fi
 
+# Ensure the shortcut directory exists
+mkdir -p "$sack__shortcut_dir"
+
 # Announce start of sack:
 echo ""
 echo "============> running $sack__default_tool! <============"
@@ -573,7 +576,7 @@ echo "===> Searching parameters: $@"
 echo ""
 
 # The actual wrapper around ack
-$sack__default_tool $sack__color_param $sack__flags "$@" "$sack__cwd" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
+$sack__default_tool $sack__color_param $sack__flags "$@" "$sack__cwd" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_dir/$PPID)
 
 # Show usage instructions for first-time users; this can be turned off
 if [[ $sack__show_instructions -eq 0 ]]; then

@@ -153,7 +153,15 @@ create_shortcut_cmd_vim() {
     sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
     cat > $sack__shortcut_cmd_path <<SHORTCUT
 #!/bin/bash
+
+function die() {
+    echo >&2 "Invalid result index"
+    exit 1
+}
+
+[[ ! "\$1" =~ ^[1-9][0-9]*$ ]] && die
 sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_file)
+[[ -z \$sack__vim_shortcut ]] && die
 sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
 sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
 if [ -z "\$EDITOR" ]; then

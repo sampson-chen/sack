@@ -154,14 +154,21 @@ create_shortcut_cmd_vim() {
     cat > $sack__shortcut_cmd_path <<SHORTCUT
 #!/bin/bash
 sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_file)
-sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
-sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
 if [ -z "\$EDITOR" ]; then
     sack__editor="$sack__default_editor"
 else
     sack__editor="\$EDITOR"
 fi
-\$sack__editor +\$sack__line "\$sack__file"
+num_fields=\`head -n 1 $sack__shortcut_file | awk '{ print NF }'\`
+if [ \${num_fields} -ge 2 ]; then
+	sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
+	sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
+	\$sack__editor +\$sack__line "\$sack__file"
+else
+	# trim whitespace from filename
+	sack__file=\`echo \$sack__vim_shortcut | awk '{print \$1}'\`
+	\$sack__editor "\$sack__file"
+fi
 SHORTCUT
     chmod +x $sack__shortcut_cmd_path
 }

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # @filename: sack
 #
@@ -152,7 +152,7 @@ create_shortcut_cmd_vim() {
     # The following literally writes the shorcut command and makes it executable
     sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
     cat > $sack__shortcut_cmd_path <<SHORTCUT
-#!/bin/bash
+#!/usr/bin/env bash
 sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_file)
 sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
 sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
@@ -170,7 +170,7 @@ SHORTCUT
 create_shortcut_cmd_rsub() {
 
     sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
-    echo "#!/bin/bash" > $sack__shortcut_cmd_path
+    echo "#!/usr/bin/env bash" > $sack__shortcut_cmd_path
     echo "sack__rsub_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
     echo "fp=\`echo \$sack__rsub_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
     echo "ln=\`echo \$sack__rsub_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
@@ -182,7 +182,7 @@ create_shortcut_cmd_rsub() {
 create_shortcut_cmd_vscode() {
 
     sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
-    echo "#!/bin/bash" > $sack__shortcut_cmd_path
+    echo "#!/usr/bin/env bash" > $sack__shortcut_cmd_path
     echo "sack__vscode_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
     echo "fp=\`echo \$sack__vscode_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
     echo "ln=\`echo \$sack__vscode_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path

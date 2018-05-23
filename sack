@@ -190,6 +190,18 @@ create_shortcut_cmd_vscode() {
     chmod +x $sack__shortcut_cmd_path
 }
 
+# Open shortcut using atom
+create_shortcut_cmd_atom() {
+
+    sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
+    echo "#!/bin/bash" > $sack__shortcut_cmd_path
+    echo "sack__atom_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
+    echo "fp=\`echo \$sack__atom_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
+    echo "ln=\`echo \$sack__atom_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
+    echo "$sack__default_editor \$fp:\$ln" >> $sack__shortcut_cmd_path
+    chmod +x $sack__shortcut_cmd_path
+}
+
 # Switch to a different profile
 switchprofile() {
     # Get the specified profile name from cmdline
@@ -592,6 +604,8 @@ elif [ $sack__default_editor == 'rsub' ]; then
     create_shortcut_cmd_rsub
 elif [ $sack__default_editor == 'code' ]; then
     create_shortcut_cmd_vscode
+elif [ $sack__default_editor == 'atom' ]; then
+    create_shortcut_cmd_atom
 else
     echo "Error: unsupported default editor specified in sack__default_editor"
 fi

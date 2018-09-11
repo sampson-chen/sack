@@ -23,7 +23,7 @@ Here is why you should use ack over grep: http://betterthangrep.com/
 
 (Now that you are sold on ack) To install ack in a one-line script:
 
-    curl http://betterthangrep.com/ack-standalone > ~/bin/ack && chmod 0755 !#:3
+    curl -L http://betterthangrep.com/ack-standalone > ~/bin/ack && chmod 0755 ~/bin/ack
 
 ## How to Install:
 

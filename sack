@@ -136,24 +136,57 @@ remove_escaped_chars() {
     # Need to do a check for the OS, because Linux uses a different sed
     # than OS X
 
-    # Linux
-    if [[ $sack__OS == "Linux" ]]; then
-        sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
+    # Linux / Cygwin
+    if [[ $sack__OS == "Linux" ]] || [[ $sack__OS == "$CYGWIN_NT"* ]]; then
+        sed -r "s/\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
     # OS X
     elif [[ $sack__OS == "Darwin" ]]; then
-        sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g" 
+        sed -E "s/\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
     fi
     # @todo: implement support for other OSes at a later date
 }
 
 # Create the actual shortcut command to be used across terminals / shell sessions
-create_shortcut_cmd() {
+create_shortcut_cmd_vim() {
     # @todo: add support for other editors as well
     # The following literally writes the shorcut command and makes it executable
-    sack__shortcut_cmd_path=~/bin/$sack__shortcut_cmd
+    sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
+    cat > $sack__shortcut_cmd_path <<SHORTCUT
+#!/bin/bash
+sack__vim_shortcut=\$(sed -n "\$1p" < $sack__shortcut_file)
+sack__line=\`echo \$sack__vim_shortcut | cut -d" " -f1\`
+sack__file=\`echo \$sack__vim_shortcut | sed 's/'\$sack__line' //'\`
+if [ -z "\$EDITOR" ]; then
+    sack__editor="$sack__default_editor"
+else
+    sack__editor="\$EDITOR"
+fi
+\$sack__editor +\$sack__line "\$sack__file"
+SHORTCUT
+    chmod +x $sack__shortcut_cmd_path
+}
+
+# Open shortcut using sublime rsub (https://github.com/henrikpersson/rsub)
+create_shortcut_cmd_rsub() {
+
+    sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
     echo "#!/bin/bash" > $sack__shortcut_cmd_path
-    echo "sack__vim_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
-    echo "$sack__default_editor +\$sack__vim_shortcut" >> $sack__shortcut_cmd_path
+    echo "sack__rsub_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
+    echo "fp=\`echo \$sack__rsub_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
+    echo "ln=\`echo \$sack__rsub_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
+    echo "$sack__default_editor -l \$ln \$fp" >> $sack__shortcut_cmd_path
+    chmod +x $sack__shortcut_cmd_path
+}
+
+# Open shortcut using vscode
+create_shortcut_cmd_vscode() {
+
+    sack__shortcut_cmd_path=$sack__shortcut_path/$sack__shortcut_cmd
+    echo "#!/bin/bash" > $sack__shortcut_cmd_path
+    echo "sack__vscode_shortcut=\$(sed -n \"\$1p\" < $sack__shortcut_file)" >> $sack__shortcut_cmd_path
+    echo "fp=\`echo \$sack__vscode_shortcut | awk '{ print \$2 }'\`" >> $sack__shortcut_cmd_path
+    echo "ln=\`echo \$sack__vscode_shortcut | awk '{ print \$1 }'\`" >> $sack__shortcut_cmd_path
+    echo "$sack__default_editor -g \$fp:\$ln" >> $sack__shortcut_cmd_path
     chmod +x $sack__shortcut_cmd_path
 }
 
@@ -176,7 +209,7 @@ switchprofile() {
         echo "===> Error: profile \"$sack__selected_profile\" is not found"
         echo ""
         echo "To create a new profile, do:"
-        echo "    sack --anp PROFILE_NAME"
+        echo "    sack -anp PROFILE_NAME"
         echo "    sack --addnewprofile ReviewBoard"
         return 1 
     fi
@@ -540,7 +573,7 @@ echo "===> Searching parameters: $@"
 echo ""
 
 # The actual wrapper around ack
-$sack__default_tool $sack__color_param $sack__flags "$@" $sack__cwd | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
+$sack__default_tool $sack__color_param $sack__flags "$@" "$sack__cwd" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)
 
 # Show usage instructions for first-time users; this can be turned off
 if [[ $sack__show_instructions -eq 0 ]]; then
@@ -553,4 +586,12 @@ else
     echo ""
 fi
 
-create_shortcut_cmd
+if [ $sack__default_editor == 'vim' -o $sack__default_editor == 'gvim' ]; then
+    create_shortcut_cmd_vim
+elif [ $sack__default_editor == 'rsub' ]; then
+    create_shortcut_cmd_rsub
+elif [ $sack__default_editor == 'code' ]; then
+    create_shortcut_cmd_vscode
+else
+    echo "Error: unsupported default editor specified in sack__default_editor"
+fi

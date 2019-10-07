@@ -562,15 +562,15 @@ else
 fi
 
 # Announce start of sack:
-echo ""
-echo "============> running $sack__default_tool! <============"
+# echo ""
+# echo "============> running $sack__default_tool! <============"
 # Note that this is different from print_current_profile_info()
-echo ""
-echo "===> Current Profile: $sack__profile_name"
-echo "===> Using flags: $sack__flags"
-echo "===> Searching under: $sack__cwd"
-echo "===> Searching parameters: $@"
-echo ""
+# echo ""
+# echo "===> Current Profile: $sack__profile_name"
+# echo "===> Using flags: $sack__flags"
+# echo "===> Searching under: $sack__cwd"
+# echo "===> Searching parameters: $@"
+# echo ""
 
 # The actual wrapper around ack
 $sack__default_tool $sack__color_param $sack__flags "$@" "$sack__cwd" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths | remove_escaped_chars > $sack__shortcut_file)

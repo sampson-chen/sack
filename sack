@@ -488,7 +488,7 @@ sack__default_tool=ack
 # Color parameter is different for ack / ag than for grep:
 sack__color_param='--color'
 
-echo "sack__option is: $sack__option"
+# echo "sack__option is: $sack__option"
 
 # Determine which search tool to use
 if [[ "$sack__option" == "-ag" ]]; then

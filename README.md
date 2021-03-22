@@ -53,6 +53,10 @@ Open a terminal and run the following:
 Copy and make it executable the script sack, sag and F in `~/bin` by
 default. You can also create symlink instead of copying.
 
+Works fine with `gawk`. Note that [mawk](https://invisible-island.net/mawk/)
+interpreter does not handle the escape sequence correctly (when parsing colored
+results with a regexp).
+
 ## How to Use
 
 You can use sag / sack in exactly the same way you currently use ag / ack! Woot!

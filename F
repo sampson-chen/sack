@@ -12,7 +12,7 @@ fi
 if [ ! -z ${SACK_SHORTCUT+x} ]; then
     sack_shortcutfile=$SACK_SHORTCUT
 else
-    sack_shortcutfile=~/.sack_shortcuts
+    sack_shortcutfile="${XDG_CACHE_DIR:-${HOME}/.cache}/sack/sack_shortcuts"
 fi
 
 # Get the line number and the file name

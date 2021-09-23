@@ -101,7 +101,9 @@ fi
 if [ ! -z ${SACK_SHORTCUT+x} ]; then
     sack__shortcut_file=$SACK_SHORTCUT
 else
-    sack__shortcut_file=~/.sack_shortcuts
+    sack_shortcut_dir="${XDG_CACHE_DIR:-$HOME/.cache}/sack"
+    test -d "${sack_shortcut_dir}" || mkdir -p "${sack_shortcut_dir}"
+    sack__shortcut_file="${sack_shortcut_dir}/sack_shortcuts"
 fi
 
 # Determine which search tool to use

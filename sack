@@ -134,12 +134,14 @@ process_shorcut_paths() {
 # colored output to stdout
 remove_escaped_chars() {
     # Need to do a check for the OS, because Linux uses a different sed
-    # than OS X
+    # than macOS / OS X
+
 
     # Linux / Cygwin
-    if [[ $sack__OS == "Linux" ]] || [[ $sack__OS == "$CYGWIN_NT"* ]]; then
+    # ('sack__OS' is defined in .sackrc)
+    if [[ $sack__OS == "Linux" ]] || [[ $sack__OS == "CYGWIN_NT"* ]]; then
         sed -r "s/\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
-    # OS X
+    # macOS / OS X
     elif [[ $sack__OS == "Darwin" ]]; then
         sed -E "s/\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
     fi

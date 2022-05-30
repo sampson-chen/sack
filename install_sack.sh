@@ -20,9 +20,9 @@ if [[ ! -d "$sack__install_main" ]]; then
     mkdir $sack__install_main
 fi
 
-cp $sack__install_cwd/sack $sack__install_main/
+cp "$sack__install_cwd/sack" $sack__install_main/
 chmod 755 $sack__install_main/sack
-cp $sack__install_cwd/sag $sack__install_main/
+cp "$sack__install_cwd/sag" $sack__install_main/
 chmod 755 $sack__install_main/sag
-cp $sack__install_cwd/F $sack__install_main/
+cp "$sack__install_cwd/F" $sack__install_main/
 chmod 755 $sack__install_main/F

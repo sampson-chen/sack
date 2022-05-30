@@ -1,35 +1,36 @@
 #!/bin/bash
 
 # Editor: if SACK_EDITOR is not defined, take the default editor.
-if [ ! -z ${SACK_EDITOR+x} ]; then
+if [ -n "${SACK_EDITOR}" ]; then
     editor=$SACK_EDITOR
 else
+    # shellcheck disable=SC2153
     editor=$EDITOR
 fi
 
-# Sack shortcut file. '.~/.sack_shortcurt' if the variable SACK_SHORTCUT is not
+# Sack shortcut file. '$XDG_CACHE_DIR/sack/sack_shortcuts' if the variable SACK_SHORTCUT is not
 # defined.
-if [ ! -z ${SACK_SHORTCUT+x} ]; then
+if [ -n "${SACK_SHORTCUT}" ]; then
     sack_shortcutfile=$SACK_SHORTCUT
 else
     sack_shortcutfile="${XDG_CACHE_DIR:-${HOME}/.cache}/sack/sack_shortcuts"
 fi
 
 # Get the line number and the file name
-_sack_line=`sed -n "$1p" < $sack_shortcutfile`
-_lineno=`echo $_sack_line | awk '{ print $1 }'`
-_fname=`echo $_sack_line | awk '{ print $2 }'`
+_sack_line=$(sed -n "$1p" < "$sack_shortcutfile")
+_lineno=$(echo "$_sack_line" | awk '{ print $1 }')
+_fname=$(echo "$_sack_line" | awk '{ print $2 }')
 
-if [ -f $sack_shortcut ]; then
+if [ -f "$sack_shortcutfile" ]; then
     # SublimeText
     if [[ "$editor" =~ 'subl' ]]; then
-        subl $_fname:$_lineno
+        subl "$_fname:$_lineno"
     # Emacs & Vim
     else
-        $editor +$_lineno $_fname
+        $editor +"$_lineno" "$_fname"
     fi
 else
-    echo "Sack shortcuts file '~/.sack_shortcuts' not found."
+    echo "Sack shortcuts file '$XDG_CACHE_DIR/sack_shortcuts' not found."
     echo "Please define the env. variable SACK_SHORTCUT or check if the file exist."
     exit 0
 fi

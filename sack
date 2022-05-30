@@ -96,9 +96,9 @@ else
     sack__color_param='--color'
 fi
 
-# Sack shortcut file. '.~/.sack_shortcurt' if the variable SACK_SHORTCUT is not
+# Sack shortcut file. '$XDG_CACHE_DIR/sack/sack_shortcuts' if the variable SACK_SHORTCUT is not
 # defined.
-if [ ! -z ${SACK_SHORTCUT+x} ]; then
+if [ -n "${SACK_SHORTCUT}" ]; then
     sack__shortcut_file=$SACK_SHORTCUT
 else
     sack_shortcut_dir="${XDG_CACHE_DIR:-$HOME/.cache}/sack"
@@ -123,5 +123,5 @@ elif [[ -z "$sack__option" || "$sack__option" == "-h" || "$sack__option" == "--h
 fi
 
 # The actual wrapper around ack, ag or grep
-$sack__default_tool $sack__color_param "$@" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths > $sack__shortcut_file)
+$sack__default_tool $sack__color_param "$@" | tee >$sack__dev_null >(display_shortcuts) >(process_shorcut_paths > "$sack__shortcut_file")
 

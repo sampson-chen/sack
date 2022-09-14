@@ -38,6 +38,7 @@ sack_print_help() {
     echo "  F [line_no] to open file at line [line_no]"
     echo ""
     echo "-ag   to use ag"
+    echo "-rg   to use ripgrep"
     echo "-grep to use grep"
     echo ""
 }
@@ -110,7 +111,10 @@ fi
 if [[ "$sack__option" == "-ag" ]]; then
     sack__default_tool=ag
     shift
-# Determine which search tool to use
+elif [[ "${sack__option}" == "-rg" ]]; then
+    sack__default_tool=rg
+    sack__color_param='-n --color=always'
+    shift
 elif [[ "$sack__option" == "-grep" ]]; then
     sack__default_tool='grep -r -I -n'
     sack__color_param='--color=always'

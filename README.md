@@ -1,9 +1,9 @@
-sag / sack
-==========
+sag / sack / srg
+================
 
 s(hortcut)-ag/ack/grep: a faster way to use ag, ack, or grep!
 
-sag / sack / sgrep act as wrappers for ag / ack / grep to provide convenience
+sag / sack / srg / sgrep act as wrappers for ag / ack / rg / grep to provide convenience
 for the repetitive menial tasks when searching through codebases via the command
 line.
 
@@ -50,7 +50,7 @@ Open a terminal and run the following:
     > cd sack
     > ./install_sack.sh
 
-Copy and make it executable the script sack, sag and F in `~/bin` by
+Copy and make it executable the script sack, sag srg, sgrep and F in `~/bin` by
 default. You can also create symlink instead of copying.
 
 Works fine with `gawk`. Note that [mawk](https://invisible-island.net/mawk/)
@@ -59,13 +59,13 @@ results with a regexp).
 
 ## How to Use
 
-You can use sag / sack in exactly the same way you currently use ag / ack! Woot!
+You can use sag / sack / srg in exactly the same way you currently use ag / ack / rg! Woot!
 
 For why sack is faster (and more fun!) to use, read on about its main / side features...
 
 ## Main Feature - Shortcuts
 
-sag / sack prefixes shortcut tags to ag / ack's search results:
+sag / sack /srg prefixes shortcut tags to ag / ack / rg's search results:
 
     user@linux:~/src$ sack thumbnail
 

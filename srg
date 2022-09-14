@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# @filename: srg
+#
+# @author: Julien Rabinow (jrabinow)
+# @date: 2022-09-13
+#
+# @description: 
+# s(hortcut)-rg - wrapper to use rg instead of ack as the
+# underlying search tool
+# 
+# @dependencies:
+# - ripgrep
+# - tee
+# - awk
+# - sed (GNU sed)
+# 
+# @version:
+# 1.0
+#
+# @license:
+# - MIT as of this version.
+#
+# @usage:
+# - for additional usage information, see README.md
+
+# ==============================================================
+# ==============================================================
+
+sack -rg "$@"

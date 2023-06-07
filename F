@@ -25,6 +25,9 @@ if [ -f "$sack_shortcutfile" ]; then
     # SublimeText
     if [[ "$editor" =~ 'subl' ]]; then
         subl "$_fname:$_lineno"
+    # VSCode
+    elif [[ "$editor" =~ 'code' ]]; then
+        $editor --goto "${_fname}:${_lineno}"
     # Emacs & Vim
     else
         $editor +"$_lineno" "$_fname"

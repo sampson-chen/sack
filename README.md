@@ -137,7 +137,22 @@ For now, you can use the script `F` to open a file at a specific line with:
 * Emacs
 * Vim
 * SublimeText
+* VSCode
 * Other editors which are be able to open a file with this syntax `+lineno
   filename`
 
-Please configure the `$SACK_EDITOR` if you needed.
+Please configure the `$SACK_EDITOR` if you needed. For instance:
+
+```bash
+# Emacs
+export SACK_EDITOR="emacsclient -n"  # if you use Emacs server. '-n' means "no wait"
+
+# Vim
+export SACK_EDITOR="vim"
+
+# SublimeText
+export SACK_EDITOR="subl"
+
+# VSCode
+export SACK_EDITOR="code"
+```
